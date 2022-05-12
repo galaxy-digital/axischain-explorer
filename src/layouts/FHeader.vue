@@ -15,7 +15,7 @@
                     ></f-navigation>
                     <f-dark-mode-switch ref="darkModeSwitch" />
                     <!-- <f-search-box ref="searchBox" class="small" expandable v-show="!cHomeView"></f-search-box> -->
-                    <a class="ch-network" v-bind:href="urlExplorer" v-on:click="changeNetwork">{{ labelChangeNetwork }}</a>
+                    <a class="f-navigation ch-network" v-bind:href="urlExplorer" v-on:click="changeNetwork">{{ labelChangeNetwork }}</a>
                     <f-hamburger-switch
                         thickness="2"
                         two-lines
@@ -367,9 +367,7 @@
                 left: 16px;
                 z-index: 11;
 
-                > img {
-                    max-height: 30px;
-                }
+                
             }
 
             &.drawer-on {
