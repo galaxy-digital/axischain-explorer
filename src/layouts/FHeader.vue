@@ -2,7 +2,7 @@
     <header class="f-header" :class="cCssClass">
         <div class="">
             <div class="row no-collapse align-items-center">
-                <div class="col-2">
+                <div class="col-3">
                     <router-link to="/" class="logo" :aria-label="$t('view_home.back_to_home')">
                         <img src="/banner-logo.png" alt="" style="margin-left:20px" class="not-fluid">
                         <b class="testnet" v-show="isTestnet">Testnet</b>
@@ -257,7 +257,7 @@
             }
 
             > img {
-                max-height: 44px;
+                max-height: 48px;
                 margin-bottom: 0 !important;
                 transition: opacity $transition-length ease;
             }
