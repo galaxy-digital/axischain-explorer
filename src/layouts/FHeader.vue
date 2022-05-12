@@ -3,7 +3,10 @@
         <div class="narrow-container">
             <div class="row no-collapse align-items-center">
                 <div class="col-3" style="">
-                    <router-link to="/" class="logo" :aria-label="$t('view_home.back_to_home')" style="display:flex;align-items:center"><img src="/banner-dark.png" alt="" class="not-fluid"></router-link>
+                    <router-link to="/" class="logo" :aria-label="$t('view_home.back_to_home')">
+                        <img src="/banner-dark.png" alt="" class="not-fluid" />
+                        <b class="testnet" v-show="isTestnet">Testnet</b>
+                    </router-link>
                 </div>
                 <div class="col right-col">
                     <f-navigation
@@ -41,6 +44,7 @@
     import FSearchBox from "../components/FSearchBox.vue";
     import FDarkModeSwitch from "@/components/FDarkModeSwitch.vue";
 
+    const appConfig = require('../../app.config.js');
     /**
      * Renderes header and takes care of navigation.
      */
@@ -54,7 +58,20 @@
         },
 
         data() {
+            const isTestnet = appConfig.useTestnet
+            let labelNetwork = ''
+            /* 
+            let urlExplorer = ''; */
+            if (isTestnet) {
+                labelNetwork = 'mainnet';
+                // urlExplorer = appConfig.explorer.mainnet
+            } else {
+                labelNetwork = 'testnet';
+                // urlExplorer = appConfig.explorer.testnet
+            }
             return {
+                isTestnet,
+                labelNetwork,
                 /** Is drawer visible? */
                 dDrawerOn: false,
             }
@@ -211,6 +228,23 @@
         }
 
         .logo {
+            position: relative;
+
+            .testnet {
+                position: absolute;
+                display: inline-block;
+                padding: 0.25em 0.4em;
+                font-size: 75%;
+                font-weight: 700;
+                line-height: 1;
+                text-align: center;
+                white-space: nowrap;
+                vertical-align: baseline;
+                border-radius: 0.25rem;
+                color: #fff;
+                background-color: #de4437;
+            }
+
             > img {
                 /* max-height: 36px; */
                 margin-bottom: 0 !important;
@@ -289,6 +323,18 @@
         &.drawer-on {
             .f-drawer {
                 transform: translateX(0);
+            }
+        }
+
+        a.ch-network {
+            display: inline-block;
+            margin: 0 10px;
+            padding:0.3em 1em;cursor:pointer;
+            border-radius: 20px;
+            transition: all 250ms ease;
+            &:hover {
+                color: #fff;
+                background-color: #de4437;
             }
         }
     }
