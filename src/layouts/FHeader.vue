@@ -4,7 +4,7 @@
             <div class="row no-collapse align-items-center">
                 <div class="col-2">
                     <router-link to="/" class="logo" :aria-label="$t('view_home.back_to_home')">
-                        <img src="/logo.svg" alt="" style="margin-left:20px" class="not-fluid">
+                        <img src="/banner-logo.png" alt="" style="margin-left:20px" class="not-fluid">
                         <b class="testnet" v-show="isTestnet">Testnet</b>
                         
                     </router-link>
