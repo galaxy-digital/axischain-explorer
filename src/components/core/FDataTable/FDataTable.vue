@@ -34,8 +34,8 @@
                     </slot>
                     <slot>
                         <tbody v-if="cItems.length">
+                        <template v-for="item in cItems">
                             <tr
-                                v-for="item in cItems"
                                 :key="item.id"
                                 :style="item.css ? obj2css(item.css) : ''"
                                 :data-dt-item-id="actionOnRow ? item.id : undefined"
@@ -56,6 +56,17 @@
                                     </slot>
                                 </td>
                             </tr>
+                            <slot
+                                name="subrow"
+                                :style="item.css ? obj2css(item.css) : ''"
+                                :dtItemId="actionOnRow ? item.id : undefined"
+                                :tabindex="actionOnRow ? 0 : -1"
+                                :item="item"
+                                :columns="columns"
+                                :visibleColumnsNum="dVisibleColumnsNum"
+                                :mobileView="false"
+                            ></slot>
+                        </template>
                         </tbody>
                         <tbody v-else-if="!loading">
                             <tr>
@@ -71,9 +82,9 @@
                         <tfoot>
                             <tr v-if="infiniteScroll && cItems.length" v-show="!disableInfiniteScroll">
                                 <td :colspan="dVisibleColumnsNum">
-                                    <div v-observe-visibility="dObserveVisibilityOptions" class="f-loading-more">
+                                    <f-intersection-observer :root-margin="`${infiniteScrollDistance}px 0px`" @entry="onEntry" class="f-loading-more">
                                         <pulse-loader color="#1969ff"></pulse-loader>
-                                    </div>
+                                    </f-intersection-observer>
                                 </td>
                             </tr>
 
@@ -88,41 +99,58 @@
                     </slot>
                 </table>
 
-                <div v-else class="mobile-view f-data-layout normal-padding 11111">
+                <div v-else class="mobile-view f-data-layout normal-padding">
                     <div v-if="cItems.length">
-                        <div
-                            v-for="item in cItems"
-                            :key="item.id"
-                            :style="item.css ? obj2css(item.css) : ''"
-                            :data-dt-item-id="actionOnRow ? item.id : undefined"
-                            :tabindex="actionOnRow ? 0 : -1"
-                            class="mobile-item"
-                        >
-                            <div v-for="(col, index) in columns" :key="col.name" :class="getColumnClass(index, col)">
-                                <template v-if="!col.hidden">
-                                    <slot
-                                        :name="`column-${col.name}`"
-                                        :value="getItemPropValue(item, col)"
-                                        :item="item"
-                                        :column="col"
-                                    >
-                                        <div class="row no-collapse no-vert-col-padding">
-                                            <div :class="`col-${firstMVColumnWidth} f-row-label`">{{ col.label }}</div>
-                                            <div class="col break-word">{{ getItemPropValue(item, col) }}</div>
-                                        </div>
-                                    </slot>
-                                </template>
+                        <template v-for="item in cItems">
+                            <div
+                                :key="item.id"
+                                :style="item.css ? obj2css(item.css) : ''"
+                                :data-dt-item-id="actionOnRow ? item.id : undefined"
+                                :tabindex="actionOnRow ? 0 : -1"
+                                class="mobile-item"
+                            >
+                                <div
+                                    v-for="(col, index) in columns"
+                                    :key="col.name"
+                                    :class="getColumnClass(index, col)"
+                                >
+                                    <template v-if="!col.hidden">
+                                        <slot
+                                            :name="`column-${col.name}`"
+                                            :value="getItemPropValue(item, col)"
+                                            :item="item"
+                                            :column="col"
+                                        >
+                                            <div class="row no-collapse no-vert-col-padding">
+                                                <div :class="`col-${firstMVColumnWidth} f-row-label`">
+                                                    {{ col.label }}
+                                                </div>
+                                                <div class="col break-word">{{ getItemPropValue(item, col) }}</div>
+                                            </div>
+                                        </slot>
+                                    </template>
+                                </div>
+                                <slot
+                                    name="subrow"
+                                    :style="item.css ? obj2css(item.css) : ''"
+                                    :dtItemId="actionOnRow ? item.id : undefined"
+                                    :tabindex="actionOnRow ? 0 : -1"
+                                    :item="item"
+                                    :columns="columns"
+                                    :visibleColumnsNum="dVisibleColumnsNum"
+                                    :mobileView="true"
+                                ></slot>
                             </div>
-                        </div>
+                        </template>
                     </div>
                     <div v-else-if="!loading">
                         <div class="no-items">{{ $t('no_items') }}</div>
                     </div>
 
                     <div v-if="infiniteScroll && cItems.length" v-show="!disableInfiniteScroll">
-                        <div v-observe-visibility="dObserveVisibilityOptions" class="f-loading-more">
+                        <f-intersection-observer :root-margin="`${infiniteScrollDistance}px 0px`" @entry="onEntry" class="f-loading-more">
                             <pulse-loader color="#1969ff"></pulse-loader>
-                        </div>
+                        </f-intersection-observer>
                     </div>
 
                     <div v-if="loading && (!cItems.length || forceLoading)">
@@ -150,9 +178,13 @@ import events from '../../../mixins/events.js';
 import FCard from '../FCard/FCard.vue';
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import { isAriaAction } from '@/utils/aria.js';
+import FIntersectionObserver from "@/components/core/FIntersectionObserver/FIntersectionObserver.vue";
+
+const GRID_STORAGE_KEY = 'chain-data-grid';
 
 export default {
     components: {
+        FIntersectionObserver,
         FCard,
         FHeadStyle,
         FPagination,
@@ -215,6 +247,14 @@ export default {
         },
 
         /**
+         * Grid's code used for identification in local storage
+         */
+        code: {
+            type: String,
+            default: '',
+        },
+
+        /**
          * Width of first column in mobile view (from '1' to '12').
          * Used in mobile view slot's default content only.
          */
@@ -241,7 +281,7 @@ export default {
          */
         infiniteScrollDistance: {
             type: Number,
-            default: 1100,
+            default: 800,
         },
 
         /**  */
@@ -304,6 +344,12 @@ export default {
             default: false,
         },
 
+        /** If `true` and `code` prop is set, save info about sorting to local storage. */
+        saveSorting: {
+            type: Boolean,
+            default: true,
+        },
+
         ...FPagination.props,
     },
 
@@ -312,12 +358,6 @@ export default {
             dId: `tbl${this._uid}`,
             dCss: '',
             dPagination: {},
-            dObserveVisibilityOptions: {
-                callback: this.fetchMore,
-                intersection: {
-                    rootMargin: `${this.infiniteScrollDistance}px`,
-                },
-            },
             dVisibleColumnsNum: 0,
             // dItems: this.items
         };
@@ -383,6 +423,8 @@ export default {
         this.colClassRE = /\s*_c(\d)\s*/;
         this._sortByCol = -1;
         this._initialSort = true;
+        // Settings stored in local storage. Keys are codes, values are settings.
+        this._settings = this.getStoredSettings();
 
         this.prepareColumns();
     },
@@ -393,8 +435,16 @@ export default {
                 this._initialSort = false;
 
                 setTimeout(() => {
-                    if (this._sortByCol > -1) {
-                        const column = this.columns[this._sortByCol];
+                    const { sorting } = this._settings;
+                    let column = null;
+
+                    if (sorting) {
+                        column = this.getColumnByName(sorting.sortBy);
+                        if (column) {
+                            this.sortByColumn(column, sorting.sortDir);
+                        }
+                    } else if (this._sortByCol > -1) {
+                        column = this.columns[this._sortByCol];
                         this.sortByColumn(column, column.sortDir);
                     }
                 }, 10);
@@ -569,6 +619,10 @@ export default {
             return column;
         },
 
+        getColumnByName(name) {
+            return this.columns.find(column => column.name === name);
+        },
+
         /**
          * Get data item value.
          *
@@ -599,8 +653,9 @@ export default {
          *
          * @param {Object} _column
          * @param {String} [_sortDir] 'asc'|'desc'
+         * @param {boolean} [_click]
          */
-        sortByColumn(_column, _sortDir) {
+        sortByColumn(_column, _sortDir, _click) {
             if (_column && _column.sortFunc) {
                 const sortByCol = this._sortByCol;
 
@@ -621,7 +676,50 @@ export default {
 
                 this._sortByCol = _column._index;
 
+                if (_click && this.code && this.saveSorting) {
+                    const sorting = {
+                        sortBy: _column.name,
+                        sortDir: _column.sortDir,
+                    }
+
+                    console.log('save sorting', sorting);
+                    this.saveSettings({ ...this._settings, sorting});
+                }
+
                 this.items.sort(_column.sortFunc(_column.itemProp || _column.name, _column.sortDir));
+            }
+        },
+
+        /**
+         * @return {Object}
+         */
+        getStoredSettings() {
+            const { localStorage } = window;
+            let settings = {};
+
+            if (this.code && localStorage) {
+                const gridSettings = JSON.parse(localStorage.getItem(GRID_STORAGE_KEY) || '{}');
+
+                if (gridSettings && gridSettings[this.code]) {
+                    settings = gridSettings[this.code];
+                }
+            }
+
+            return settings;
+        },
+
+        /**
+         * @param {Object} settings
+         */
+        saveSettings(settings) {
+            const { localStorage } = window;
+
+            if (this.code && localStorage) {
+                const gridSettings = JSON.parse(localStorage.getItem(GRID_STORAGE_KEY) || '{}');
+
+                gridSettings[this.code] = settings;
+
+                localStorage.setItem(GRID_STORAGE_KEY, JSON.stringify(gridSettings));
             }
         },
 
@@ -661,7 +759,7 @@ export default {
             let elem = _event.target.closest('th');
             const column = elem ? this.getColumnByClass(elem.className) : null;
 
-            this.sortByColumn(column);
+            this.sortByColumn(column, '', true);
         },
 
         /**
@@ -671,6 +769,13 @@ export default {
          */
         onPageChange(_data) {
             this.dPagination = cloneObject(_data.detail);
+        },
+
+        /**
+         * @param {IntersectionObserverEntry} _entry
+         */
+        onEntry(_entry) {
+            this.fetchMore(_entry.isIntersecting);
         },
 
         /**

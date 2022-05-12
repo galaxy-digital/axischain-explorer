@@ -1,19 +1,19 @@
 import web3utils from 'web3-utils';
-
-const WEI_IN_AXIS = 1e18;
+import config from '../../app.config'
+const WEI_IN_ = 1000000000000000000;
 
 /**
  * @return {number}
  */
-export function WEIToAXIS(_value) {
-    return (_value / WEI_IN_AXIS);
+export function WEITo(_value) {
+    return (_value / WEI_IN_);
 }
 
 /**
  * @return {number}
  */
-export function AXISToWEI(_value) {
-    return _value * WEI_IN_AXIS;
+export function ToWEI(_value) {
+    return _value * WEI_IN_;
 }
 
 /**
@@ -21,8 +21,8 @@ export function AXISToWEI(_value) {
  * @param {number} [_tokenPrice]
  * @return {number}
  */
-export function AXISToUSD(_value, _tokenPrice = 0.002) {
-    return _value * _tokenPrice;
+export function ToUSD(_value, _tokenPrice) {
+    return _value * (_tokenPrice || config.publicSalePrice);
 }
 
 /**

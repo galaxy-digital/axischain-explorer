@@ -1,17 +1,14 @@
 <template>
-<div class="assets-view">
-        <div class="narrow-container">
+    <div class="assets-view narrow-container">
         <f-view-heading>
             <h1>{{ $t('view_assets.title') }}</h1>
-        </f-view-heading>                   
-        </div>
-        
-        <div class="div-container" style="padding-top:20px">
+        </f-view-heading>
+
 
         <f-tabs>
             <template #assets>
                 <h2>
-                    {{ $t('view_assets.axis_finance_assets') }}
+                    {{ $t('view_assets.chain_finance_assets') }}
                     <span class="f-records-count">({{ assetsRecordsCount }})</span>
                 </h2>
             </template>
@@ -29,7 +26,6 @@
                 <erc20-asset-list @records-count="onErc20AssetsRecordsCount" />
             </f-tab>
         </f-tabs>
-        </div>
     </div>
 </template>
 

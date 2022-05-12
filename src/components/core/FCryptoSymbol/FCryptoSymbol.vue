@@ -9,9 +9,10 @@
 </template>
 
 <script>
-import axisIcon from '../../../assets/svg/tokens/AXIS.svg';
-import waxisIcon from '../../../assets/svg/tokens/wAXIS.svg';
-import fusdIcon from '../../../assets/svg/tokens/fUSD.svg';
+import config from '../../../../app.config'
+import Icon from '../../../assets/svg/tokens/COIN.svg';
+import wIcon from '../../../assets/svg/tokens/wCOIN.svg';
+import usdIcon from '../../../assets/svg/tokens/USD.svg';
 
 /**
  * Render crypto logo and name by given token.
@@ -55,12 +56,12 @@ export default {
 
             if (token) {
                 switch (token.symbol) {
-                    case 'AXIS':
-                        return axisIcon;
-                    case 'WAXIS':
-                        return waxisIcon;
-                    case 'FUSD':
-                        return fusdIcon;
+                    case config.symbol:
+                        return Icon;
+                    case config.wsymbol:
+                        return wIcon;
+                    case config.usdsymbol:
+                        return usdIcon;
                 }
             }
 

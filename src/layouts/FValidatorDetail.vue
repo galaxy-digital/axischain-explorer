@@ -8,7 +8,7 @@
                         <div v-show="cStakerName">
                             <div class="validator-img">
                                 <img v-if="cStakerLogoUrl"  :src="cStakerLogoUrl" :alt="cStakerName" class="not-fluid">
-                                <img v-else src="/axis.svg" alt="axis logo" class="not-fluid">
+                                <img v-else src="/logo.png" alt="logo" class="not-fluid">
                             </div>
 
                             {{ cStakerName }}
@@ -31,7 +31,11 @@
 
                 <div class="row no-collapse">
                     <div class="col-4 f-row-label">{{ $t('view_validator_detail.address') }}</div>
-                    <div class="col"><div class="break-word">{{ address }}</div></div>
+                    <div class="col">
+                        <div class="break-word">
+                            <router-link :to="{name: 'address-detail', params: {id: address}}">{{ address }}</router-link>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row no-collapse">
@@ -56,7 +60,7 @@
                     <div class="col-4 f-row-label">{{ $t('view_validator_detail.amount_staked') }}</div>
                     <div class="col">
                         <div v-show="'stake' in cStaker">
-                            {{ formatNumberByLocale(numToFixed(WEIToAXIS(cStaker.stake), 0)) }} AXIS
+                            {{ formatNumberByLocale(numToFixed(WEITo(cStaker.stake), 0)) }} {{ symbol }}
                         </div>
                     </div>
                 </div>
@@ -65,7 +69,7 @@
                     <div class="col-4 f-row-label">{{ $t('view_validator_detail.amount_delegated') }}</div>
                     <div class="col">
                         <div v-show="'delegatedMe' in cStaker">
-                            {{ formatNumberByLocale(numToFixed(WEIToAXIS(cStaker.delegatedMe), 0)) }} AXIS
+                            {{ formatNumberByLocale(numToFixed(WEITo(cStaker.delegatedMe), 0)) }} {{ symbol }}
                         </div>
                     </div>
                 </div>
@@ -74,7 +78,7 @@
                     <div class="col-4 f-row-label">{{ $t('view_validator_detail.staking_total') }}</div>
                     <div class="col">
                         <div v-show="'totalStake' in cStaker">
-                            {{ formatNumberByLocale(numToFixed(WEIToAXIS(cStaker.totalStake), 0)) }} AXIS
+                            {{ formatNumberByLocale(numToFixed(WEITo(cStaker.totalStake), 0)) }} {{ symbol }}
                         </div>
                     </div>
                 </div>
@@ -141,6 +145,7 @@
 </template>
 
 <script>
+    import config from '../../app.config'
     import FCard from "../components/core/FCard/FCard.vue";
     import gql from 'graphql-tag';
     import {
@@ -152,7 +157,7 @@
         formatDate,
         prepareTimestamp
     } from "../filters.js";
-    import { WEIToAXIS } from "../utils/transactions.js";
+    import { WEITo } from "../utils/transactions.js";
     import FDelegationList from "../data-tables/FDelegationList.vue";
     import FYesNo from "../components/FYesNo.vue";
 
@@ -219,7 +224,8 @@
         data() {
             return {
                 dDelegationListRecordsCount: 0,
-                dStakerByAddressError: ''
+                dStakerByAddressError: '',
+                symbol: config.symbol
             }
         },
 
@@ -274,7 +280,7 @@
                 this.dDelegationListRecordsCount = _num;
             },
 
-            WEIToAXIS,
+            WEITo,
             timestampToDate,
             formatDate,
             formatHexToInt,

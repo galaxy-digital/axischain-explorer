@@ -16,7 +16,7 @@
                     <div class="col-4 f-row-label">{{ $t('epoch.total_base_reward') }}</div>
                     <div class="col">
                         <div class="break-word">
-                            <f-t-m-token-value :value="cEpoch.totalBaseRewardWeight" convert />
+                            <FCoinTokenValue :value="cEpoch.totalBaseRewardWeight" convert />
                         </div>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                     <div class="col-4 f-row-label">{{ $t('epoch.total_fee') }}</div>
                     <div class="col">
                         <div class="break-word">
-                            <f-t-m-token-value :value="cEpoch.epochFee" convert />
+                            <FCoinTokenValue :value="cEpoch.epochFee" convert />
                         </div>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                     <div class="col-4 f-row-label">{{ $t('epoch.total_tx_reward') }}</div>
                     <div class="col">
                         <div class="break-word">
-                            <f-t-m-token-value :value="cEpoch.totalTxRewardWeight" convert />
+                            <FCoinTokenValue :value="cEpoch.totalTxRewardWeight" convert />
                         </div>
                     </div>
                 </div>
@@ -49,11 +49,11 @@
 import FCard from "../components/core/FCard/FCard.vue";
 import gql from 'graphql-tag';
 import {timestampToDate, formatDate } from "../filters.js";
-/* import AXISTokenValue from "@/components/core/AXISTokenValue/AXISTokenValue.vue"; */
+import FCoinTokenValue from "@/components/core/FCoinTokenValue/FCoinTokenValue.vue";
 
 export default {
     components: {
-        /* AXISTokenValue, */
+        FCoinTokenValue,
         FCard
     },
 
@@ -81,7 +81,7 @@ export default {
             `,
             variables() {
                 return {
-                    number: `0x${parseInt(this.id).toString(16)}`
+                    id: `0x${parseInt(this.id).toString(16)}`
                 }
             },
             error(_error) {

@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import web3utils from 'web3-utils';
-const appConfig = require('../app.config.js');
+const config = require('../app.config.js');
 
 const zeroString = '00000000';
-const downtimeThreshold = appConfig.downtimeThreshold;
+const downtimeThreshold = config.downtimeThreshold;
 
 /**
  * @param {string|number} _timestamp

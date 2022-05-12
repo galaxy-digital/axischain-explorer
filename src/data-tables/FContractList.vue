@@ -41,7 +41,7 @@
 <script>
 import FDataTable from "../components/core/FDataTable/FDataTable.vue";
 import gql from "graphql-tag";
-import { WEIToAXIS } from "../utils/transactions.js";
+import { WEITo } from "../utils/transactions.js";
 import {timestampToDate, formatHexToInt, formatDate} from "../filters.js";
 import FEllipsis from "../components/core/FEllipsis/FEllipsis.vue";
 import {cloneObject} from "@/utils";
@@ -193,7 +193,7 @@ export default {
             }
         },
 
-        WEIToAXIS,
+        WEITo,
         timestampToDate
     }
 };

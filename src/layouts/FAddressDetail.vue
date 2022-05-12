@@ -14,11 +14,11 @@
                     <div class="balance center-v">
                         <h3 class="h1">
                             <span v-show="cAccount">
-                                <MyTokenValue :value="cAccount ? cAccount.totalValue : 1" convert no-currency /> <span class="axis">AXIS</span>
+                                <FCoinTokenValue :value="cAccount ? cAccount.totalValue : 1" convert no-currency /> <span class="f-coin">{{ symbol }}</span>
                             </span>
                         </h3>
                         <div v-show="cAccount" class="usd">
-                            <MyTokenValue :value="toUSD(cAccount ? cAccount.totalValue : 1)" with-price-currency no-currency />
+                            <FCoinTokenValue :value="toUSD(cAccount ? cAccount.totalValue : 1)" with-price-currency no-currency />
                         </div>
                     </div>
                 </f-card>
@@ -26,14 +26,15 @@
             <div class="col col-6-lg margin-bottom-menu">
                 <f-card>
                     <h2>{{ $t('view_address_detail.available') }}</h2>
+
                     <div class="balance center-v">
                         <h3 class="h1">
                             <span v-show="'available' in cAssets">
-                                <MyTokenValue :value="cAssets.available" convert no-currency /> <span class="axis">AXIS</span>
+                                <FCoinTokenValue :value="cAssets.available" convert no-currency /> <span class="f-coin">{{ symbol }}</span>
                             </span>
                         </h3>
                         <div v-show="'available' in cAssets" class="usd">
-                            <MyTokenValue :value="toUSD(cAssets.available)" with-price-currency no-currency />
+                            <FCoinTokenValue :value="toUSD(cAssets.available)" with-price-currency no-currency />
                         </div>
                     </div>
                 </f-card>
@@ -41,22 +42,31 @@
             <div class="col">
                 <f-card>
                     <h2>{{ $t('view_address_detail.staking') }}</h2>
+
+                    <!--
+                                            <div class="row no-collapse">
+                                                <div class="col f-row-label">{{ $t('view_address_detail.available') }}</div>
+                                                <div class="col">
+                                                    <div v-show="'available' in cAssets">{{ toCoin(cAssets.available) }} {{ symbol }}</div>
+                                                </div>
+                                            </div>
+                    -->
                     <div class="row no-collapse">
                         <div class="col f-row-label">{{ $t('view_address_detail.delegated') }}</div>
                         <div class="col">
-                            <div v-show="'delegated' in cAssets"><MyTokenValue :value="cAssets.delegated" /></div>
+                            <div v-show="'delegated' in cAssets"><FCoinTokenValue :value="cAssets.delegated" /></div>
                         </div>
                     </div>
                     <div class="row no-collapse">
                         <div class="col f-row-label">{{ $t('view_address_detail.pending_rewards') }}</div>
                         <div class="col">
-                            <div v-show="'pending_rewards' in cAssets"><MyTokenValue :value="cAssets.pending_rewards" /></div>
+                            <div v-show="'pending_rewards' in cAssets"><FCoinTokenValue :value="cAssets.pending_rewards" /></div>
                         </div>
                     </div>
                     <div class="row no-collapse">
                         <div class="col f-row-label">{{ $t('view_address_detail.stashed_rewards') }}</div>
                         <div class="col">
-                            <div v-show="'stashed' in cAssets"><MyTokenValue :value="cAssets.stashed" convert /></div>
+                            <div v-show="'stashed' in cAssets"><FCoinTokenValue :value="cAssets.stashed" convert /></div>
                         </div>
                     </div>
                     <div class="row no-collapse">
@@ -64,7 +74,7 @@
                         <div class="col">
                             <div v-show="'claimed_rewards' in cAssets">
                                 -
-                                <!--{{ toAXIS(cAssets.claimed_rewards, true) }} AXIS-->
+                                <!--{{ toCoin(cAssets.claimed_rewards, true) }} {{ symbol }}-->
                             </div>
                         </div>
                     </div>
@@ -85,6 +95,41 @@
                 </f-card>
             </div>
         </div>
+
+        
+                    <br><br>
+                    <f-card>
+                        <h2 class="break-word">{{ id }}</h2>
+                        <div class="row">
+                            <div class="col">
+                                <div class="num-block">
+                                    <h2 class="h3">{{ $t('view_address_detail.value_in_coin') }}</h2>
+                                    <div class="num"><span v-show="cAccount">{{ toCoin(cAccount ? cAccount.totalValue : 1) }}</span></div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="num-block">
+                                    <h2 class="h3">{{ $t('view_address_detail.value_in_usd') }}</h2>
+                                    <div class="num"><span v-show="cAccount">{{ toUSD(cAccount ? cAccount.totalValue : 1) }}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </f-card>
+       
+
+        <!--
+                    <div class="f-subsection">
+                        <h2 class="h1">{{ $t('view_address_detail.assets') }} <span v-if="cAssetItems.length" class="f-records-count">({{ cAssetItems.length }})</span></h2>
+
+                        <f-data-table
+                            :columns="dAssetColumns"
+                            :items="cAssetItems"
+                            fixed-header
+                        >
+                        </f-data-table>
+                    </div>
+        -->
+
         <div class="f-subsection">
             <f-tabs>
                 <template #transactions>
@@ -148,21 +193,25 @@
                     <address-delegation-list v-if="this.loadDelegations" :account-address="id" @records-count="onDelegationsRecordsCount" />
                 </f-tab>
             </f-tabs>
+
+<!--                <h2 class="h1">{{ $t('view_block_detail.block_transactions') }} <span v-if="dRecordsCount" class="f-records-count">({{ dRecordsCount }})</span></h2>-->
+
         </div>
     </div>
 </template>
 
 <script>
+    import config from '../../app.config'
     import FCard from "../components/core/FCard/FCard.vue";
     import gql from 'graphql-tag';
-    import { WEIToAXIS, AXISToUSD } from "../utils/transactions.js";
+    import { WEITo, ToUSD } from "../utils/transactions.js";
     import FTransactionList from "../data-tables/FTransactionList.vue";
     import {formatHexToInt, timestampToDate} from "../filters.js";
     import FTabs from "@/components/core/FTabs/FTabs.vue";
     import FTab from "@/components/core/FTabs/FTab.vue";
     import AddressDelegationList from "@/data-tables/AddressDelegationList.vue";
     import AddressAssetList from "@/data-tables/AddressAssetList.vue";
-    import MyTokenValue from "@/components/core/MyTokenValue/MyTokenValue.vue";
+    import FCoinTokenValue from "@/components/core/FCoinTokenValue/FCoinTokenValue.vue";
     import Erc20TransationList from "@/data-tables/Erc20TransationList.vue";
     import Erc721TransationList from "@/data-tables/Erc721TransationList.vue";
     import Erc1155TransationList from "@/data-tables/Erc1155TransationList.vue";
@@ -172,7 +221,7 @@
             Erc1155TransationList,
             Erc721TransationList,
             Erc20TransationList,
-            MyTokenValue,
+            FCoinTokenValue,
             AddressAssetList,
             AddressDelegationList,
             FTab,
@@ -241,6 +290,18 @@
                                             number
                                             timestamp
                                         }
+                                        tokenTransactions {
+                                            trxIndex
+                                            tokenAddress
+                                            tokenName
+                                            tokenSymbol
+                                            tokenType
+                                            tokenId
+                                            type
+                                            sender
+                                            recipient
+                                            amount
+                                        }
                                     }
                                 }
                             }
@@ -298,29 +359,7 @@
                 dAccountByAddressError: '',
                 validators: null,
                 loadDelegations: false,
-/*
-                dAssetColumns: [
-                    {
-                        name: 'asset',
-                        label: this.$t('view_address_detail.asset')
-                    },
-                    {
-                        name: 'balance',
-                        label: this.$t('view_address_detail.balance'),
-                        cssClass: 'align-end',
-                    },
-                    {
-                        name: 'valueInAXIS',
-                        label: this.$t('view_address_detail.value_in_axis'),
-                        cssClass: 'align-end',
-                    },
-                    {
-                        name: 'valueInUSD',
-                        label: this.$t('view_address_detail.value_in_usd'),
-                        cssClass: 'align-end',
-                    }
-                ]
-*/
+                symbol: config.symbol,
             }
         },
 
@@ -388,9 +427,9 @@
 
                             validatorIds.push(delegation.toStakerId);
 
-                            assets.delegated += (delegation ? WEIToAXIS(delegation.amount) : 0);
-                            assets.pending_rewards += (delegation && delegation.pendingRewards ? WEIToAXIS(delegation.pendingRewards.amount) : 0);
-                            assets.claimed_rewards += (delegation ? WEIToAXIS(delegation.claimedReward) : 0);
+                            assets.delegated += (delegation ? WEITo(delegation.amount) : 0);
+                            assets.pending_rewards += (delegation && delegation.pendingRewards ? WEITo(delegation.pendingRewards.amount) : 0);
+                            assets.claimed_rewards += (delegation ? WEITo(delegation.claimedReward) : 0);
                         });
 
                         this.setValidators(validatorIds);
@@ -448,29 +487,12 @@
         },
 
         methods: {
-            /**
-             * Get one item for asset data table.
-             *
-             * @param {string} _assetName
-             * @param {string|number} _value
-             */
-/*
-            getAssetItem(_assetName, _value) {
-                return {
-                    asset: _assetName,
-                    balance: this.toAXIS(_value),
-                    valueInAXIS: this.toAXIS(_value),
-                    valueInUSD: this.toUSD(_value)
-                }
-            },
-*/
 
             async initDeFi() {
                 const { $defi } = this;
                 const result = await Promise.all([
-                    $defi.fetchFMintAccount(this.id),
+                    $defi.fetchMintAccount(this.id),
                     $defi.fetchERC20Assets(this.id),
-                    // $defi.fetchERC20Tokens(),
                     $defi.init(),
                 ]);
 
@@ -551,14 +573,14 @@
             },
 
             /**
-             * Convert value to AXIS.
+             * Convert value to .
              *
              * @param {string|number} _value
              * @param {boolean} _isNumber Value is number.
              * @return {string}
              */
-            toAXIS(_value, _isNumber) {
-                return _isNumber ? _value : WEIToAXIS(_value);
+            toCoin(_value, _isNumber) {
+                return _isNumber ? _value : WEITo(_value);
             },
 
             /**
@@ -568,7 +590,7 @@
              * @return {string}
              */
             toUSD(_value) {
-                return AXISToUSD(WEIToAXIS(_value), this.$store.state.tokenPrice);
+                return ToUSD(WEITo(_value), this.$store.state.tokenPrice);
             },
 
             onErc20RecordsCount(_count) {
@@ -613,8 +635,8 @@
                 }
             },
 
-            WEIToAXIS,
-            AXISToUSD,
+            WEITo,
+            ToUSD,
             timestampToDate,
         }
     }
@@ -651,10 +673,7 @@
             }
         }
 
-        .f-card {
-            padding: 30px;
-            -webkit-box-shadow: var(--f-card-box-shadow) !important;
-            box-shadow: var(--f-card-box-shadow) !important;
+        > .f-card {
         }
 
         .f-tabs {

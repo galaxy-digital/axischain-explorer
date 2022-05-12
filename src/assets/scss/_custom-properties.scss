@@ -41,24 +41,14 @@
             --f-data-table-cell-background-color: var(--f-doc-background-color);
         }
     }
+
     .f-card {
-        --f-card-padding: 0px;
+        --f-card-padding: 40px;
 
         &.f-data-table-body-bg-color {
             .f-data-table {
                 //--f-data-table-cell-background-color: none;
-                --f-data-table-cell-background-color: #eaeaea;
-            }
-        }
-    }
-
-    .dark-theme .f-card {
-        --f-card-padding: 0px;
-
-        &.f-data-table-body-bg-color {
-            .f-data-table {
-                //--f-data-table-cell-background-color: none;
-                --f-data-table-cell-background-color: #171717;
+                --f-data-table-cell-background-color: var(--f-card-background-color);
             }
         }
     }

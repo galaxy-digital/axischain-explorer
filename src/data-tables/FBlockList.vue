@@ -45,10 +45,11 @@
 </template>
 
 <script>
+    import config from '../../app.config.js';
     // import FDataTable from "../components/FDataTable.vue";
     import FDataTable from "../components/core/FDataTable/FDataTable.vue";
     import gql from 'graphql-tag';
-    import { WEIToAXIS } from "../utils/transactions.js";
+    import { WEITo } from "../utils/transactions.js";
     import {timestampToDate, formatDate, formatHexToInt} from "../filters.js";
     import {cloneObject} from "@/utils";
 
@@ -155,9 +156,9 @@
                     },
                     {
                         name: 'fee',
-                        label: `${this.$t('view_block_list.fee')} (AXIS)`,
+                        label: `${this.$t('view_block_list.fee')} (${config.symbol})`,
                         itemProp: 'block.gasUsed',
-                        formatter: (_value) => WEIToAXIS(_value * (this.gasPrice || 1500000000)),
+                        formatter: (_value) => WEITo(_value * (this.gasPrice || 1500000000)),
                         // width: '80px'
                     },
                     {
@@ -188,12 +189,24 @@
                             cursor,
                             count: this.itemsPerPage
                         },
-                        
+                        updateQuery: (previousResult, { fetchMoreResult }) => {
+                            // this.dHasNext = fetchMoreResult.blocks.pageInfo.hasNext;
+
+                            return fetchMoreResult;
+/*
+                            return {
+                                blocks: {
+                                    ...fetchMoreResult.blocks,
+                                    edges: [...previousResult.blocks.edges, ...fetchMoreResult.blocks.edges]
+                                }
+                            }
+*/
+                        }
                     });
                 }
             },
 
-            WEIToAXIS,
+            WEITo,
             timestampToDate
         }
     }

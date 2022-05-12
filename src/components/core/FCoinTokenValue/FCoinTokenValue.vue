@@ -1,5 +1,5 @@
 <template>
-    <span class="axistokenvalue">
+    <span class="tokenvalue">
         <f-token-value
             :value="cValue"
             :decimals="decimals"
@@ -8,16 +8,17 @@
             no-currency
             v-bind="$attrs"
         />
-        <span v-if="!noCurrency"> AXIS</span>
+        <span v-if="!noCurrency"> {{ symbol }}</span>
     </span>
 </template>
 
 <script>
+import config from '../../../../app.config.js';
 import FTokenValue from '@/components/core/FTokenValue/FTokenValue.vue';
-import { WEIToAXIS } from '@/utils/transactions.js';
+import { WEITo } from '@/utils/transactions.js';
 
 export default {
-    name: 'axis-token-value',
+    name: 'FCoinTokenValue',
 
     components: { FTokenValue },
 
@@ -30,7 +31,7 @@ export default {
             type: Number,
             default: 2,
         },
-        /** Convert value to AXIS */
+        /** Convert value to Native coin */
         convert: {
             type: Boolean,
             default: false,
@@ -44,10 +45,17 @@ export default {
             default: false,
         },
     },
+    
+    data() {
+        return {
+            /** Current page index. */
+            symbol: config.symbol
+        }
+    },
 
     computed: {
         cValue() {
-            return this.convert ? WEIToAXIS(this.value) : this.value;
+            return this.convert ? WEITo(this.value) : this.value;
         },
     },
 };

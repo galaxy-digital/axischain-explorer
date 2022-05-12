@@ -1,37 +1,36 @@
 <template>
     <div class="f-validators-info">
-
         <template v-if="!dValidatorsInfoError">
-            <div class="row f-data-layout equal-height no-vert-col-padding collapse-md deepak">
+            <div class="row f-data-layout equal-height no-vert-col-padding collapse-md">
                 <div class="col margin-bottom-menu">
                     <f-card>
-                        <h2 style="border-bottom:1px solid #272727; padding-bottom:10px">{{ $t('view_validators_info.staking_summary') }}</h2>
-<hr>
+                        <h2>{{ $t('view_validators_info.staking_summary') }}</h2>
+
                         <div class="row no-collapse">
                             <div class="col-5 f-row-label">{{ $t('view_validators_info.total_self_staked') }}</div>
                             <div class="col">
-                                <div v-show="'fSelfStaked' in dTotals">{{ dTotals.fSelfStaked }} AXIS <span v-if="cSelfStaked">({{ cSelfStaked }}%)</span></div>
+                                <div v-show="'fSelfStaked' in dTotals">{{ dTotals.fSelfStaked }} {{ symbol }} <span v-if="cSelfStaked">({{ cSelfStaked }}%)</span></div>
                             </div>
                         </div>
 
                         <div class="row no-collapse">
                             <div class="col-5 f-row-label">{{ $t('view_validators_info.total_delegated') }}</div>
                             <div class="col">
-                                <div v-show="'fTotalDelegated' in dTotals">{{ dTotals.fTotalDelegated }} AXIS <span v-if="cDelegated">({{ cDelegated }}%)</span></div>
+                                <div v-show="'fTotalDelegated' in dTotals">{{ dTotals.fTotalDelegated }} {{ symbol }} <span v-if="cDelegated">({{ cDelegated }}%)</span></div>
                             </div>
                         </div>
 
                         <div class="row no-collapse">
                             <div class="col-5 f-row-label">{{ $t('view_validators_info.total_staked') }}</div>
                             <div class="col">
-                                <div v-show="'fTotalStaked' in dTotals">{{ dTotals.fTotalStaked }} AXIS <span v-if="cStaked">({{ cStaked }}%)</span></div>
+                                <div v-show="'fTotalStaked' in dTotals">{{ dTotals.fTotalStaked }} {{ symbol }} <span v-if="cStaked">({{ cStaked }}%)</span></div>
                             </div>
                         </div>
 
                         <div class="row no-collapse">
                             <div class="col-5 f-row-label">{{ $t('view_validators_info.daily_rewards') }}</div>
                             <div class="col">
-                                <div v-show="cDailyRewards">{{ formatNumberByLocale(numToFixed(cDailyRewards, 0)) }} AXIS</div>
+                                <div v-show="cDailyRewards">{{ formatNumberByLocale(numToFixed(cDailyRewards, 0)) }} {{ symbol }}</div>
                             </div>
                         </div>
 
@@ -47,8 +46,8 @@
                 </div>
                 <div class="col">
                     <f-card>
-                        <h2 style="border-bottom:1px solid #272727; padding-bottom:10px">{{ $t('view_validators_info.last_epoch') }}</h2>
-<hr>
+                        <h2>{{ $t('view_validators_info.last_epoch') }}</h2>
+
                         <div class="row no-collapse">
                             <div class="col-5 f-row-label">{{ $t('view_validators_info.epoch_number') }}</div>
                             <div class="col">
@@ -77,14 +76,14 @@
                         <div class="row no-collapse">
                             <div class="col-5 f-row-label">{{ $t('view_validators_info.fee') }}</div>
                             <div class="col">
-                                <div v-show="'epochFee' in cEpoch">{{  WEIToAXIS(cEpoch.epochFee) }} AXIS</div>
+                                <div v-show="'epochFee' in cEpoch">{{  WEITo(cEpoch.epochFee) }} {{ symbol }}</div>
                             </div>
                         </div>
 
                         <div class="row no-collapse">
                             <div class="col-5 f-row-label">{{ $t('view_validators_info.total_supply') }}</div>
                             <div class="col">
-                                <div v-show="dTotalSupply">{{ formatNumberByLocale(numToFixed(dTotalSupply, 0)) }} AXIS</div>
+                                <div v-show="dTotalSupply">{{ formatNumberByLocale(numToFixed(dTotalSupply, 0)) }} {{ symbol }}</div>
                             </div>
                         </div>
                     </f-card>
@@ -100,42 +99,40 @@
             <h2 class="h1">{{ $t('view_validator_list.validators') }} <span v-if="dRecordsCount" class="f-records-count">({{ dRecordsCount }})</span></h2>
 
             <f-validator-list
+                code="validators"
                 @records-count="onRecordsCount"
                 @validator-list-totals="onValidatorListTotals"
                 @validator-list-offline="onValidatorListOffline"
                 @validator-list-flagged="onValidatorListFlagged"
+                @validator-list-inactive="onValidatorListInactive"
             >
             </f-validator-list>
+        </div>
+
+        <div class="f-subsection" v-if="dInactiveItems.length">
+            <h2 class="h1">{{ $t('view_validator_list.inactive') }} <span class="f-records-count">({{ dInactiveItems.length }})</span></h2>
+
+            <f-validator-list :items="dInactiveItems" code="inactive-validators" />
         </div>
 
         <div class="f-subsection" v-if="dOfflineItems.length">
             <h2 class="h1">{{ $t('view_validator_list.offline') }} <span class="f-records-count">({{ dOfflineItems.length }})</span></h2>
 
-            <f-validator-list
-                :items="dOfflineItems"
-            >
-            </f-validator-list>
+            <f-validator-list :items="dOfflineItems" code="offline-validators" />
         </div>
 
         <div class="f-subsection" v-if="dFlaggedItems.length">
             <h2 class="h1">{{ $t('view_validator_list.flagged') }} <span class="f-records-count">({{ dFlaggedItems.length }})</span></h2>
 
-            <f-validator-list
-                :items="dFlaggedItems"
-            >
-            </f-validator-list>
+            <f-validator-list :items="dFlaggedItems" code="flagged-validators" />
         </div>
     </div>
 </template>
-<style>
-.dark-theme .deepak .f-card { background-color: black !important;
-border:1px solid #272727;
-padding:20px;}.deepak .f-card { background-color: #eaeaea !important;
-padding:20px;}
-</style>
+
 <script>
+    import config from '../../app.config'
     import gql from 'graphql-tag';
-    import { WEIToAXIS } from "../utils/transactions.js";
+    import { WEITo } from "../utils/transactions.js";
     import FCard from "../components/core/FCard/FCard.vue";
     import FValidatorList from "../data-tables/FValidatorList.vue";
     import {formatHexToInt, formatNumberByLocale, numToFixed, timestampToDate} from "../filters.js";
@@ -204,7 +201,7 @@ padding:20px;}
                     }
                 },
                 result(_data) {
-                    this.dTotalSupply = WEIToAXIS(_data.data.epoch.totalSupply);
+                    this.dTotalSupply = WEITo(_data.data.epoch.totalSupply);
                 },
                 error(_error) {
                     this.dValidatorsInfoError = _error.message;
@@ -217,10 +214,12 @@ padding:20px;}
                 dItems: [],
                 dOfflineItems: [],
                 dFlaggedItems: [],
+                dInactiveItems: [],
                 dValidatorsInfoError: '',
                 dTotals: {},
                 dTotalSupply: 0,
-                dRecordsCount: 0
+                dRecordsCount: 0,
+                symbol: config.symbol,
             }
         },
 
@@ -257,7 +256,7 @@ padding:20px;}
                 const {epoch} = this;
 
                 if (epoch && epoch.baseRewardPerSecond) {
-                    return WEIToAXIS(epoch.baseRewardPerSecond) * 86400;
+                    return WEITo(epoch.baseRewardPerSecond) * 86400;
                 }
 
                 return 0;
@@ -301,7 +300,11 @@ padding:20px;}
                 this.dFlaggedItems = _flagged;
             },
 
-            WEIToAXIS,
+            onValidatorListInactive(_inactive) {
+                this.dInactiveItems = _inactive;
+            },
+
+            WEITo,
             timestampToDate,
             formatHexToInt,
             formatNumberByLocale,

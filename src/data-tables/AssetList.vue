@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import config from '../../app.config'
 import FDataTable from '../components/core/FDataTable/FDataTable.vue';
 import FCryptoSymbol from '../components/core/FCryptoSymbol/FCryptoSymbol.vue';
 import { stringSort } from '../utils/array-sorting.js';
@@ -149,7 +150,7 @@ export default {
                 $defi.init(),
             ]);
 
-            this.tokens = result[0].filter((_item) => _item.isActive && _item.symbol !== 'AXIS');
+            this.tokens = result[0].filter((_item) => _item.isActive && _item.symbol !== config.symbol);
 
             this.$emit('records-count', this.tokens.length);
         },

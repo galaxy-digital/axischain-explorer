@@ -30,13 +30,19 @@
     "source_code": "Source Code",
     "copy_to_clipboard": "Copy {what} to clipboard",
     "copied_to_clipboard": "{what} copied to clipboard",
-    "copied_to_clipboard_warning": "Warning: Use this address to receive AXIS Galaxy only. If you are receiving AXIS-ERC20 you need to use a different address!",
+    "copied_to_clipboard_warning": "Warning: Use this address to receive Native Coin only. If you are receiving ERC20 you need to use a different address!",
     "gas_used": "Gas Used",
     "hash": "Hash",
     "assets": "Assets",
     "asset": "Asset",
     "token": "Token",
     "token_id": "Token Id",
+    "transfer": "Transfer",
+    "mint": "Mint",
+    "burn": "Burn",
+    "approval": "Approval",
+    "approval_for_all": "Approval for all",
+    "other": "Other",
 
     "navigation": [
         {
@@ -116,7 +122,8 @@
         "gas_price": "Gas Price",
         "transaction_fee": "Transaction Fee",
         "input_data": "Input Data",
-        "nonce": "Nonce"
+        "nonce": "Nonce",
+        "token_txs": "Nested token transactions"
     },
     "view_address_detail": {
         "title": "Address",
@@ -124,7 +131,7 @@
         "asset": "@:asset",
         "balance": "Total Balance",
         "staking": "Staking",
-        "value_in_axis": "Value in AXIS",
+        "value_in_coin": "Value",
         "value_in_usd": "Value in USD",
         "available": "Available",
         "delegated": "Delegated",
@@ -165,14 +172,15 @@
         "address": "@:address",
         "poi": "Proof of Importance",
         "created_on": "@:created_on",
-        "self_staked": "Self-Staked (AXIS)",
-        "delegated": "Delegated (AXIS)",
-        "total_staked": "Total Staked (AXIS)",
+        "self_staked": "Self-Staked",
+        "delegated": "Delegated",
+        "total_staked": "Total Staked",
         "link": "Link",
         "offline": "Offline",
         "unknown": "@:unknown",
         "downtime": "Downtime",
-        "flagged": "Flagged"
+        "flagged": "Flagged",
+        "inactive": "Inactive"
     },
     "view_assets": {
         "title": "@:assets",
@@ -186,7 +194,7 @@
         "hash": "@:hash",
         "market_cap": "Market Cap",
         "symbol": "Symbol",
-        "axis_finance_assets": "AXIS Finance Assets",
+        "chain_finance_assets": "Finance Assets",
         "all_erc20_tokens": "All ERC20 Tokens"
     },
     "view_validators_info": {
@@ -225,7 +233,7 @@
         "address": "@:address",
         "created_on": "@:created_on",
         "created_epoch": "Created on Epoch",
-        "amount": "Amount (AXIS)"
+        "amount": "Amount"
     },
     "view_contract_list": {
         "title": "Contracts",

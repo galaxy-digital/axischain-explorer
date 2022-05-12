@@ -2,7 +2,7 @@
 .DS_Store
 node_modules/
 dist/
-app.config.js
+
 # local env files
 .env.local
 .env.*.local
@@ -20,3 +20,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+app.config.js

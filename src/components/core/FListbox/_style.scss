@@ -16,13 +16,12 @@
         &_item {
             color: var(--flistbox-item-color);
             padding: var(--flistbox-item-padding);
-            //background-color: var(--flistbox-item-background-color);
+            background-color: var(--flistbox-item-background-color);
             word-break: break-word;
 
             &[aria-selected="true"] {
                 color: var(--flistbox-item-selected-color);
-                background-color: white;
-                color:black
+                background-color: var(--flistbox-item-selected-background-color);
             }
 
             &[aria-disabled="true"] {
@@ -32,8 +31,6 @@
 
         &:not([aria-disabled="true"]) {
             .flistbox_list_item {
-                border:1px solid white;
-                margin-left: 10px;
                 &:not([aria-disabled="true"]) {
                     cursor: pointer;
 

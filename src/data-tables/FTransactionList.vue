@@ -129,13 +129,43 @@
                             <template v-slot:column-fee="{ value, column }">
                                 <div v-if="column" class="row no-collapse no-vert-col-padding">
                                     <div class="col-5 f-row-label">{{ column.label }}</div>
-                                    <div class="col">{{ WEIToAXIS(value | formatHexToInt) }}</div>
+                                    <div class="col">{{ WEITo(value | formatHexToInt) }}</div>
                                 </div>
                                 <template v-else>
-                                    {{ WEIToAXIS(value | formatHexToInt) }}
+                                    {{ WEITo(value | formatHexToInt) }}
                                 </template>
                             </template>
                 -->
+
+                <template #subrow="{ item, columns, visibleColumnsNum, style, tabindex, dtItemId, mobileView }">
+                    <template v-if="!mobileView">
+                        <tr
+                            v-if="filterApprovals(item.transaction && item.transaction.tokenTransactions).length > 0"
+                            :style="style"
+                            :tabindex="tabindex"
+                            :data-dt-item-id="dtItemId"
+                            class="subrow"
+                        >
+                            <td :colspan="visibleColumnsNum" class="tokentxstd">
+                                <div class="tokentxs">
+                                    <token-transactions-list
+                                        :token-transactions="filterApprovals(item.transaction.tokenTransactions)"
+                                        :address="addressCol"
+                                    />
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                    <template v-else>
+                        <details v-if="filterApprovals(item.transaction && item.transaction.tokenTransactions).length > 0" class="tokentxs">
+                            <summary>Details</summary>
+                            <token-transactions-list
+                                :token-transactions="filterApprovals(item.transaction.tokenTransactions)"
+                                :address="addressCol"
+                            />
+                        </details>
+                    </template>
+                </template>
             </f-data-table>
         </template>
 
@@ -146,19 +176,22 @@
 </template>
 
 <script>
+    import config from '../../app.config.js';
     import FDataTable from "../components/core/FDataTable/FDataTable.vue";
     import gql from 'graphql-tag';
-    import { WEIToAXIS } from "../utils/transactions.js";
+    import { WEITo } from "../utils/transactions.js";
     import {formatHexToInt, timestampToDate, numToFixed, formatNumberByLocale} from "../filters.js";
     import {getNestedProp} from "../utils";
     import FAccountTransactionAmount from "../components/FAccountTransactionAmount.vue";
     import FTokenValue from "@/components/core/FTokenValue/FTokenValue.vue";
+    import TokenTransactionsList from "@/data-tables/TokenTransactionsList";
 
     export default {
         components: {
             FTokenValue,
             FAccountTransactionAmount,
-            FDataTable
+            FDataTable,
+            TokenTransactionsList,
         },
 
         props: {
@@ -246,6 +279,18 @@
                                         number
                                         timestamp
                                     }
+                                    tokenTransactions {
+                                        trxIndex
+                                        tokenAddress
+                                        tokenName
+                                        tokenSymbol
+                                        tokenType
+                                        tokenId
+                                        type
+                                        sender
+                                        recipient
+                                        amount
+                                    }
                                 }
                             }
                         }
@@ -268,6 +313,7 @@
 
         data() {
             return {
+                symbol: config.symbol,
                 dItems: [],
                 dHasNext: false,
                 dOutsideData: !!this.items.action,
@@ -347,26 +393,18 @@
                     },
                     {
                         name: 'amount',
-                        label: `${this.$t('view_transaction_list.amount')} (AXIS)`,
+                        label: `${this.$t('view_transaction_list.amount')}`,
                         itemProp: `${!this.withoutCursor ? 'transaction.' : ''}value`,
                         formatter: _value => {
-                            // return formatNumberByLocale(numToFixed(WEIToAXIS(_value), 2), 2)
-                            return WEIToAXIS(_value);
+                            // return formatNumberByLocale(numToFixed(WEITo(_value), 2), 2)
+                            return WEITo(_value);
                         },
                         width: '150px',
                         css: {
                             textAlign: 'right'
                         }
                     }
-/*
-                    {
-                        name: 'fee',
-                        label: `${this.$t('view_transaction_list.fee')} (AXIS)`,
-                        itemProp: 'gasUsed',
-                        width: '130px'
-                    }
-*/
-                ]
+                ],
             }
         },
 
@@ -483,10 +521,47 @@
                 }
             },
 
-            WEIToAXIS,
+            filterApprovals(tokenTransactions) {
+                return (tokenTransactions || []).filter(tx => tx.type !== 'APPROVAL');
+            },
+
+            WEITo,
             timestampToDate,
             numToFixed,
             formatNumberByLocale
         }
     }
 </script>
+
+<style lang="scss">
+.transaction-list-dt {
+
+    .tokentxs {
+        margin-top: -20px;
+    }
+
+    .tokentxs summary {
+        cursor: pointer;
+    }
+
+    .token-transaction-item {
+        margin-left: 200px;
+    }
+
+    .mobile-item {
+        .tokentxs {
+            margin-top: 0;
+
+            .token-transaction-item {
+                line-height: 0.8;
+                margin-bottom: 16px;
+                margin-left: 0;
+
+                a {
+                    max-width: 120px;
+                }
+            }
+        }
+    }
+}
+</style>

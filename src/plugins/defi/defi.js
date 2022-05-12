@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import {cloneObject, isObjectEmpty, lowercaseFirstChar} from '../../utils';
 import web3utils from 'web3-utils';
 import { fFetch } from '../ffetch.js';
+import config from '../../../app.config'
 
 /** @type {BNBridgeExchange} */
 export let defi = null;
@@ -46,15 +47,15 @@ export class DeFi {
         /** @type {DefiToken[]} */
         this.tokens = [];
         /** @type {DefiToken} */
-        this.fusdToken = {};
+        this.usdToken = {};
         /** @type {DefiToken} */
-        this.axisToken = {};
+        this.coinToken = {};
         /** Keys are token symbols, values are number of decimals. */
         this.tokenDecimals = {};
         /** Addresses of various contracts. */
         this.contracts = {
-            fMint: '',
-            fMintReward: '',
+            Mint: '',
+            MintReward: '',
             uniswapCoreFactory: '',
             uniswapRouter: '',
         };
@@ -86,8 +87,8 @@ export class DeFi {
         this.rewardCollateralRatio = parseInt(_settings.rewardCollateralRatio4, 16) / dec;
         // this.warningCollateralRatio = parseInt(_settings.warningCollateralRatio4, 16) / dec;
         this.mintFee = parseInt(_settings.mintFee4, 16) / dec;
-        contracts.fMint = _settings.fMintContract;
-        contracts.fMintReward = _settings.fMintRewardDistribution;
+        contracts.Mint = _settings.MintContract;
+        contracts.MintReward = _settings.MintRewardDistribution;
         contracts.uniswapCoreFactory = _settings.uniswapCoreFactory;
         contracts.uniswapRouter = _settings.uniswapRouter;
     }
@@ -97,9 +98,9 @@ export class DeFi {
      * @private
      */
     _setTokens(_tokens) {
-        this.tokens = _tokens;
-        this.fusdToken = _tokens.find((_item) => _item.symbol === 'FUSD');
-        this.axisToken = _tokens.find((_item) => _item.symbol === 'AXIS');
+        this.okens = _tokens;
+        this.usdToken = _tokens.find((_item) => _item.symbol === config.usdsymbol);
+        this.coinToken = _tokens.find((_item) => _item.symbol === config.symbol);
 
         /*
         if (isObjectEmpty(this.tokenDecimals)) {
@@ -235,7 +236,7 @@ export class DeFi {
      */
     getTokenSymbol(_token) {
         return _token && _token.symbol
-            ? _token.symbol !== 'AXIS'
+            ? _token.symbol !== config.symbol
                 ? lowercaseFirstChar(_token.symbol)
                 : _token.symbol
             : '';
@@ -252,32 +253,32 @@ export class DeFi {
     /**
      * Get overall debt in FUSD.
      *
-     * @param {FMintAccount} _fMintAccount
+     * @param {FMintAccount} _MintAccount
      * @return {number}
      */
-    getOverallDebt(_fMintAccount) {
-        return this.fromTokenValue(_fMintAccount.debtValue, this.fusdToken);
+    getOverallDebt(_MintAccount) {
+        return this.fromTokenValue(_MintAccount.debtValue, this.usdToken);
     }
 
     /**
      * Get overall collateral in FUSD.
      *
-     * @param {FMintAccount} _fMintAccount
+     * @param {FMintAccount} _MintAccount
      * @return {number}
      */
-    getOverallCollateral(_fMintAccount) {
-        return this.fromTokenValue(_fMintAccount.collateralValue, this.fusdToken);
+    getOverallCollateral(_MintAccount) {
+        return this.fromTokenValue(_MintAccount.collateralValue, this.usdToken);
     }
 
     /**
      * Get overall borrow limit in FUSD.
      *
-     * @param {FMintAccount} _fMintAccount
+     * @param {FMintAccount} _MintAccount
      * @return {number}
      */
-    getBorrowLimit(_fMintAccount) {
-        const overallDebt = this.getOverallDebt(_fMintAccount);
-        const overallCollateral = this.getOverallCollateral(_fMintAccount);
+    getBorrowLimit(_MintAccount) {
+        const overallDebt = this.getOverallDebt(_MintAccount);
+        const overallCollateral = this.getOverallCollateral(_MintAccount);
 
         return this.getMaxDebtFUSD(overallCollateral) - overallDebt;
     }
@@ -285,12 +286,12 @@ export class DeFi {
     /**
      * Get overall borrow limit in hex.
      *
-     * @param {FMintAccount} _fMintAccount
+     * @param {FMintAccount} _MintAccount
      * @return {number}
      */
-    getBorrowLimitHex(_fMintAccount) {
-        const debtValue = web3utils.toBN(_fMintAccount.debtValue);
-        const collateralValue = web3utils.toBN(_fMintAccount.collateralValue);
+    getBorrowLimitHex(_MintAccount) {
+        const debtValue = web3utils.toBN(_MintAccount.debtValue);
+        const collateralValue = web3utils.toBN(_MintAccount.collateralValue);
 
         return '0x' + collateralValue.divn(this.minCollateralRatio).sub(debtValue).toString('hex');
     }
@@ -298,14 +299,14 @@ export class DeFi {
     /**
      * Get overall debt limit in FUSD.
      *
-     * @param {FMintAccount} _fMintAccount
+     * @param {FMintAccount} _MintAccount
      * @param {number} [_currDebtFUSD] Current debt in FUSD.
      * @param {number} [_currCollateralFUSD] Current corrateral in FUSD.
      * @return {number}
      */
-    getDebtLimit(_fMintAccount, _currDebtFUSD = 0, _currCollateralFUSD = 0) {
-        const overallDebt = this.getOverallDebt(_fMintAccount);
-        const overallCollateral = this.getOverallCollateral(_fMintAccount);
+    getDebtLimit(_MintAccount, _currDebtFUSD = 0, _currCollateralFUSD = 0) {
+        const overallDebt = this.getOverallDebt(_MintAccount);
+        const overallCollateral = this.getOverallCollateral(_MintAccount);
 
         return this.getMintingLimitFUSD(_currDebtFUSD + overallDebt, _currCollateralFUSD + overallCollateral);
     }
@@ -564,7 +565,7 @@ export class DeFi {
      * @return {boolean}
      */
     canTokenBeDeposited(_token) {
-        return _token && _token.isActive && _token.canDeposit && _token.symbol !== 'AXIS';
+        return _token && _token.isActive && _token.canDeposit && _token.symbol !== config.symbol;
     }
 
     /**
@@ -573,7 +574,7 @@ export class DeFi {
      */
     canTokenBeTraded(_token) {
         // return _token && _token.isActive && _token.canTrade;
-        return _token && _token.isActive && (_token.canTrade || _token.symbol === 'AXIS');
+        return _token && _token.isActive && (_token.canTrade || _token.symbol === config.symbol);
         // return _token && _token.isActive && (_token.canTrade || _token.symbol === 'FUSD');
     }
 
@@ -596,7 +597,7 @@ export class DeFi {
                         mintFee4
                         rewardCollateralRatio4
                         minCollateralRatio4
-                        fMintContract
+                        MintContract
                         decimals
                     }
                 }
@@ -627,7 +628,7 @@ export class DeFi {
                               priceDecimals
                               totalSupply
                               isActive
-                              CanWrapAXIS
+                              canWrap
                               canDeposit
                               canMint
                               canBorrow
@@ -649,7 +650,7 @@ export class DeFi {
                               priceDecimals
                               totalSupply
                               isActive
-                              CanWrapAXIS
+                              canWrap
                               canDeposit
                               canMint
                               canBorrow
@@ -870,11 +871,11 @@ export class DeFi {
      * @param {string} _ownerAddress
      * @return {Promise<FMintAccount>}
      */
-    async fetchFMintAccount(_ownerAddress = '') {
+    async fetchMintAccount(_ownerAddress = '') {
         const data = await this.apolloClient.query({
             query: gql`
                 query FMintAccount($owner: Address!) {
-                    fMintAccount(owner: $owner) {
+                    MintAccount(owner: $owner) {
                         address
                         collateral {
                             type
@@ -909,38 +910,8 @@ export class DeFi {
             fetchPolicy: 'network-only',
         });
         /** @type {FMintAccount} */
-        const { fMintAccount } = data.data;
+        const { MintAccount } = data.data;
 
-        return fMintAccount;
-    }
-
-    /**
-     * @param {string} [_to]
-     * @return {Promise<Number>}
-     */
-    async fetchAXISTokenPrice(_to = 'USD') {
-        const data = await this.apolloClient.query({
-            query: gql`
-                query Price($to: String!) {
-                    price(to: $to) {
-                        price
-                    }
-                }
-            `,
-            variables: {
-                to: _to,
-            },
-            fetchPolicy: 'network-only',
-        });
-
-        if (!data.data.price) {
-            return;
-        }
-
-        let tokenPrice = parseFloat(data.data.price.price);
-
-        tokenPrice = parseInt(tokenPrice * 100000) / 100000;
-
-        return tokenPrice;
+        return MintAccount;
     }
 }

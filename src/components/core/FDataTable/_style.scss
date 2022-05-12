@@ -37,7 +37,7 @@
         height: 48px;
 
         td {
-            background-color: black;
+            background-color: var(--f-data-table-cell-background-color);
             vertical-align: middle;
 
             &.f-col {
@@ -73,14 +73,14 @@
     &.fixed-header {
         /*position: relative;*/
 
-        // thead th {
-        //     position: -webkit-sticky;
-        //     position: sticky;
-        //     //top: $f-header-height;
-        //     //top: 128px;
-        //     top: var(--f-data-table-header-sticky-top);
-        //     z-index: 2;
-        // }
+        thead th {
+            position: -webkit-sticky;
+            position: sticky;
+            //top: $f-header-height;
+            //top: 128px;
+            top: var(--f-data-table-header-sticky-top);
+            z-index: 2;
+        }
 
         &.height-set {
             thead th {
@@ -95,7 +95,7 @@
             background-color: var(--f-data-table-cell-background-color);
             //border-radius: 8px;
             //box-shadow: $elev2-shadow;
-            margin-bottom: 0px;
+            margin-bottom: 16px;
 
             border-radius: 0;
             box-shadow: none;
@@ -225,7 +225,6 @@
         .table-container {
             overflow-y: auto;
             overflow-x: hidden;
-            background-color: black;
         }
     }
 
@@ -233,11 +232,11 @@
         tr {
             td, th {
                 &.f-col {
-                    /*padding-inline-start: 0;*/
+                    padding-inline-start: 0;
                 }
 
                 &.l-col {
-                    /*padding-inline-end: 0;*/
+                    padding-inline-end: 0;
                 }
             }
         }
@@ -254,21 +253,5 @@
                 }
             }
         }
-    }
-}
-
-.dark-theme thead {
-    th {
-        font-family: $font-family-proxima;
-        //background-color: var(--f-doc-background-color);
-        background-color: black;
-    }
-}
-
-.dark-theme tr {
-    td {
-        font-family: $font-family-proxima;
-        //background-color: var(--f-doc-background-color);
-        // background-color: ;
     }
 }

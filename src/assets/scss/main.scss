@@ -17,62 +17,13 @@
 
 body {
     letter-spacing: -0.5px;
-    background-image: url(/public/main-bg.png);
 }
 
-::-webkit-scrollbar {
-    width: 5px;
-    
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: transparent; 
-    
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: white; 
-    border-radius: 10px;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555; 
-  }
 main {
     padding-top: 16px;
-    // padding-bottom: 32px;
+    padding-bottom: 32px;
 }
-.row{
-    margin: 0 !important
-}
-.div-container{
-    padding:7%;
-    padding-top:100px;
-    background-color:rgba(0,0,0,0.7);
-}
-.table-container{
-    background-color: black;
-    border:1px solid #272727;
-    border-radius: 10px;
-    th, td{
-        border-bottom: 1px solid #272727;
-    }
-    td{
-        border-right:1px solid #272727;
-        border-radius:0 !important
-    }
-    tr td:last-child{
-        border-right:none
-    }
-    th{
-        text-transform: uppercase;
-        font-weight: 100;
-        // letter-spacing: 0.4px;
-    }
-}
+
 @include links() {
     text-decoration: none;
 }
@@ -260,7 +211,7 @@ form {
     }
 }
 
-.axis {
+.f-coin {
     font-size: 0.6em;
 }
 
@@ -274,6 +225,11 @@ form {
     }
 }
 
+.number {
+    font-family: sans-serif;
+    font-variant-numeric: tabular-nums;
+}
+
 @include media-max($bp-large) {
     .margin-bottom-menu {
         margin-bottom: 30px;
@@ -285,12 +241,6 @@ form {
         > h2 {
             margin-bottom: 16px;
         }
-    }
-    .div-container{
-        padding:2%
-    }
-    .table-container{
-        padding:10px
     }
 }
 

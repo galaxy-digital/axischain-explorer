@@ -59,9 +59,10 @@
 </template>
 
 <script>
+import config from '../../app.config.js';
 import FDataTable from "../components/core/FDataTable/FDataTable.vue";
 import gql from "graphql-tag";
-import { WEIToAXIS } from "../utils/transactions.js";
+import { WEITo } from "../utils/transactions.js";
 import {timestampToDate, formatHexToInt, formatDate } from "../filters.js";
 import {cloneObject} from "@/utils";
 import FTokenValue from "@/components/core/FTokenValue/FTokenValue.vue";
@@ -163,23 +164,23 @@ export default {
                 },
                 /*{
                     name: 'baseReward',
-                    label: this.$t('epoch.total_base_reward') + ' (AXIS)',
+                    label: this.$t('epoch.total_base_reward') + ' (' + config.symbol + ')',
                     itemProp: 'epoch.totalBaseRewardWeight',
-                    formatter: (_value) => formatNumberByLocale(WEIToAXIS(_value), 1, 2),
+                    formatter: (_value) => formatNumberByLocale(WEITo(_value), 1, 2),
                     cssClass: 'align-end',
                 },*/
                 {
                     name: 'fee',
-                    label: this.$t('epoch.total_fee') + ' (AXIS)',
+                    label: this.$t('epoch.total_fee') + ' (' + config.symbol + ')',
                     itemProp: 'epoch.epochFee',
-                    formatter: (_value) => WEIToAXIS(_value),
+                    formatter: (_value) => WEITo(_value),
                     cssClass: 'align-end',
                 },
                 /*{
                     name: 'txReward',
-                    label: this.$t('epoch.total_tx_reward') + ' (AXIS)',
+                    label: this.$t('epoch.total_tx_reward') + ' (' + config.symbol + ')',
                     itemProp: 'epoch.totalTxRewardWeight',
-                    formatter: (_value) => formatNumberByLocale(WEIToAXIS(_value), 1, 2),
+                    formatter: (_value) => formatNumberByLocale(WEITo(_value), 1, 2),
                     cssClass: 'align-end',
                 }*/
             ]
@@ -222,7 +223,7 @@ export default {
             }
         },
 
-        WEIToAXIS,
+        WEITo,
         timestampToDate
     }
 };

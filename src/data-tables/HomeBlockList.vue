@@ -28,7 +28,7 @@
 
                 <template v-slot:column-age="{ value, column }">
                     <div v-if="column" class="row no-collapse no-vert-col-padding">
-                        <div class="col-4 f-row-label"> {{ column.label }}</div>
+                        <div class="col-4 f-row-label">{{ column.label }}</div>
                         <div class="col">
                             <timeago :datetime="timestampToDate(value)" :auto-update="1" :converter-options="{includeSeconds: true}"></timeago>
                         </div>
@@ -45,7 +45,7 @@
 <script>
 import FBlockList from "@/data-tables/FBlockList.vue";
 import FDataTable from "@/components/core/FDataTable/FDataTable.vue";
-import {WEIToAXIS} from "@/utils/transactions.js";
+import {WEITo} from "@/utils/transactions.js";
 import {timestampToDate} from "@/filters.js";
 import gql from "graphql-tag";
 import {cloneObject} from "@/utils";
@@ -138,7 +138,7 @@ export default {
             return cloneObject(data.data && data.data.blocks && data.data.blocks.edges ? data.data.blocks.edges : []);
         },
 
-        WEIToAXIS,
+        WEITo,
         timestampToDate
     }
 }

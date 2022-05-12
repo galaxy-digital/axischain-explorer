@@ -59,7 +59,7 @@
     import FCard from "../components/core/FCard/FCard.vue";
     import FTransactionList from "../data-tables/FTransactionList.vue";
     import gql from 'graphql-tag';
-    import { WEIToAXIS } from "../utils/transactions.js";
+    import { WEITo } from "../utils/transactions.js";
     import { formatHexToInt, timestampToDate, formatDate } from "../filters.js";
 
     export default {
@@ -154,7 +154,7 @@
         },
 
         methods: {
-            WEIToAXIS,
+            WEITo,
             formatHexToInt,
             timestampToDate,
             formatDate

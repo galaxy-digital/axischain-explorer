@@ -106,12 +106,13 @@
 </template>
 
 <script>
+import config from '../../app.config.js';
 import {pollingMixin} from "@/mixins/polling.js";
 import FDataTable from "@/components/core/FDataTable/FDataTable.vue";
 import FAccountTransactionAmount from "@/components/FAccountTransactionAmount.vue";
 import {cloneObject, getNestedProp} from "@/utils";
 import {formatHexToInt, formatNumberByLocale, numToFixed, timestampToDate} from "@/filters.js";
-import {WEIToAXIS} from "@/utils/transactions.js";
+import {WEITo} from "@/utils/transactions.js";
 import gql from "graphql-tag";
 
 export default {
@@ -207,10 +208,10 @@ export default {
                 },
                 {
                     name: 'amount',
-                    label: `${this.$t('view_transaction_list.amount')} (AXIS)`,
+                    label: `${this.$t('view_transaction_list.amount')} (${config.symbol})`,
                     itemProp: `${!this.withoutCursor ? 'transaction.' : ''}value`,
                     formatter: _value => {
-                        return formatNumberByLocale(numToFixed(WEIToAXIS(_value), 2), 2)
+                        return formatNumberByLocale(numToFixed(WEITo(_value), 2), 2)
                     },
                     width: '150px',
                     css: {
@@ -321,7 +322,7 @@ export default {
             return getNestedProp(_item, `${!this.withoutCursor ? 'transaction.' : ''}to`)
         },
 
-        WEIToAXIS,
+        WEITo,
         timestampToDate,
         numToFixed,
         formatNumberByLocale

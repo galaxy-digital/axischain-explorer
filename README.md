@@ -1,6 +1,6 @@
-# AXIS Explorer
+# axischain explorer
 
-JavaScript and Vue based AXIS explorer.
+JavaScript and Vue based axischain explorer.
 
 We are using:
 * Node / NPM

@@ -1,21 +1,16 @@
 <template>
     <header class="f-header" :class="cCssClass">
-        <div class="">
+        <div class="narrow-container">
             <div class="row no-collapse align-items-center">
-                <div class="col-3">
-                    <router-link to="/" class="logo" :aria-label="$t('view_home.back_to_home')">
-                        <img src="/banner-logo.png" alt="" style="margin-left:20px" class="not-fluid">
-                        <b class="testnet" v-show="isTestnet">Testnet</b>
-                        
-                    </router-link>
+                <div class="col-3" style="">
+                    <router-link to="/" class="logo" :aria-label="$t('view_home.back_to_home')" style="display:flex;align-items:center"><img src="/banner-dark.png" alt="" class="not-fluid"></router-link>
                 </div>
                 <div class="col right-col">
                     <f-navigation
                         :items="cNavigation"
                     ></f-navigation>
                     <f-dark-mode-switch ref="darkModeSwitch" />
-                    <!-- <f-search-box ref="searchBox" class="small" expandable v-show="!cHomeView"></f-search-box> -->
-                    <a class="f-navigation ch-network" v-bind:href="urlExplorer" v-on:click="changeNetwork">{{ labelChangeNetwork }}</a>
+                    <f-search-box ref="searchBox" class="small" expandable v-show="!cHomeView"></f-search-box>
                     <f-hamburger-switch
                         thickness="2"
                         two-lines
@@ -31,7 +26,7 @@
             <div class="footer">
                 <f-social-media-links></f-social-media-links>
                 <div class="copyright">
-                    <a href="https://axischain.network" target="_blank" rel="nofollow">©2021 axischain.network</a>
+                    <a href="https://axischain.network/" target="_blank" rel="nofollow">©2020 axischain</a>
                 </div>
             </div>
         </div>
@@ -43,37 +38,25 @@
     import FHamburgerSwitch from "../components/FHamburgerSwitch.vue";
     import FSocialMediaLinks from "../components/FSocialMediaLinks.vue";
     import { mapState } from 'vuex';
-    // import FSearchBox from "../components/FSearchBox.vue";
+    import FSearchBox from "../components/FSearchBox.vue";
     import FDarkModeSwitch from "@/components/FDarkModeSwitch.vue";
-    
-    const appConfig = require('../../app.config.js');
-    
+
+    /**
+     * Renderes header and takes care of navigation.
+     */
     export default {
         components: {
             FDarkModeSwitch,
-            // FSearchBox,
+            FSearchBox,
             FNavigation,
             FHamburgerSwitch,
             FSocialMediaLinks
         },
 
         data() {
-            const isTestnet = appConfig.useTestnet
-            let labelChangeNetwork = ''
-            let urlExplorer = '';
-            if (isTestnet) {
-                labelChangeNetwork = 'Switch to mainnet';
-                urlExplorer = appConfig.explorer.mainnet
-            } else {
-                labelChangeNetwork = 'Switch to testnet';
-                urlExplorer = appConfig.explorer.testnet
-            }
             return {
-                isTestnet,
-                labelChangeNetwork,
-                urlExplorer,
                 /** Is drawer visible? */
-                dDrawerOn: false
+                dDrawerOn: false,
             }
         },
 
@@ -133,6 +116,7 @@
                 }
             }
         },
+
         methods: {
             moveNavigationToDrawer() {
                 const { $refs } = this;
@@ -194,25 +178,14 @@
 
             onDrawerClick() {
                 this.hamburgerSwitchOff();
-            },
-
-            changeNetwork() {
-                const network = window.localStorage.getItem('graphql-network');
-                if (network==='testnet') {
-                    window.localStorage.setItem('graphql-network', 'mainnet');
-                } else {
-                    window.localStorage.setItem('graphql-network', 'testnet');
-                }
-                window.location.reload();
             }
         }
     }
 </script>
 
 <style lang="scss">
-.dark-theme .f-header {background: var(--f-header-background-color)!important;}
     .f-header {
-        --f-header-background-color: white;
+        --f-header-background-color: #{$theme-color};
         --f-header-link-color: #{$secondary-color-lighter};
 
         /*position: -webkit-sticky;*/
@@ -221,12 +194,11 @@
         top: 0;
         z-index: 10;
         width: 100%;
-        // height: $f-header-height;
+        height: $f-header-height;
         color: #fff;
-        background-color: #fbfcff;
+        background-color: var(--f-header-background-color);
         transition: height $transition-length ease;
         border-bottom: 1px solid transparent;
-
 
         .narrow-container {
             padding-top: 0;
@@ -239,25 +211,8 @@
         }
 
         .logo {
-            position: relative;
-
-            .testnet {
-                position: absolute;
-                display: inline-block;
-                padding: 0.25em 0.4em;
-                font-size: 75%;
-                font-weight: 700;
-                line-height: 1;
-                text-align: center;
-                white-space: nowrap;
-                vertical-align: baseline;
-                border-radius: 0.25rem;
-                color: #fff;
-                background-color: #de4437;
-            }
-
             > img {
-                max-height: 48px;
+                /* max-height: 36px; */
                 margin-bottom: 0 !important;
                 transition: opacity $transition-length ease;
             }
@@ -320,7 +275,7 @@
             //text-align: end;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
 
             .f-navigation {
                 margin-inline-end: 16px;
@@ -329,24 +284,11 @@
 
         .f-dark-mode-switch {
             margin-inline-end: 16px;
-            margin-left: 50px;
         }
 
         &.drawer-on {
             .f-drawer {
                 transform: translateX(0);
-            }
-        }
-
-        a.ch-network {
-            display: inline-block;
-            margin: 0 10px;
-            padding:0.3em 1em;cursor:pointer;
-            border-radius: 20px;
-            transition: all 250ms ease;
-            &:hover {
-                color: #fff;
-                background-color: #de4437;
             }
         }
     }
@@ -363,11 +305,14 @@
         .f-header {
             .logo {
                 position: fixed;
-                top: 4px;
+                /*top: 10px;*/
+                top: 8px;
                 left: 16px;
                 z-index: 11;
 
-                
+                > img {
+                    max-height: 48px;
+                }
             }
 
             &.drawer-on {
@@ -404,7 +349,7 @@
                 position: fixed;
                 z-index: 12;
                 top: 8px;
-                left: 30%;
+                left: 50%;
                 margin-inline-end: 0;
                 margin-inline-start: 0;
                 /*transform: scale(0.5);*/
@@ -417,7 +362,7 @@
                         }
 
                         button[type="submit"] {
-                            /* color: #fff; */
+                            color: #fff;
 
                             &:hover {
                                 background-color: transparent !important;
@@ -441,9 +386,6 @@
                     text-align: end;
                     margin-inline-end: 8px;
                 }
-            }
-            a.ch-network {
-                margin-right: 60px;
             }
         }
     }

@@ -1,35 +1,35 @@
 <template>
     <ul class="f-social-media-links no-markers">
-        <li>
-            <a href="https://t.co/rUA9BE8kf2?amp=1" target="_blank" rel="nofollow" title="AXIS on Discord">
+        <!-- <li>
+            <a href="https://t.co/rUA9BE8kf2?amp=1" target="_blank" rel="nofollow" title="axischain on Discord">
                 <icon data="@/assets/svg/social-media/discord.svg" width="24" height="24"></icon>
             </a>
         </li>
         <li>
-            <a href="https://twitter.com/AXISFDN" target="_blank" rel="nofollow" title="AXIS on Twitter">
+            <a href="https://twitter.com/axischainFDN" target="_blank" rel="nofollow" title="axischain on Twitter">
                 <icon data="@/assets/svg/social-media/twitter.svg" width="24" height="24"></icon>
             </a>
         </li>
         <li>
-            <a href="https://www.reddit.com/r/AXISFoundation/" target="_blank" rel="nofollow" title="AXIS on Reddit">
+            <a href="https://www.reddit.com/r/axischainFoundation/" target="_blank" rel="nofollow" title="axischain on Reddit">
                 <icon data="@/assets/svg/social-media/reddit.svg" width="24" height="24"></icon>
             </a>
         </li>
         <li>
-            <a href="https://github.com/AXIS-Foundation" target="_blank" rel="nofollow" title="AXIS on Github">
+            <a href="https://github.com/axischain-Foundation" target="_blank" rel="nofollow" title="axischain on Github">
                 <icon data="@/assets/svg/social-media/github.svg" width="24" height="24"></icon>
             </a>
         </li>
         <li>
-            <a href="https://medium.com/AXISfoundation" target="_blank" rel="nofollow" title="AXIS on Medium">
+            <a href="https://medium.com/axischainfoundation" target="_blank" rel="nofollow" title="axischain on Medium">
                 <icon data="@/assets/svg/social-media/medium.svg" width="24" height="24"></icon>
             </a>
         </li>
         <li>
-            <a href="https://www.linkedin.com/company/AXIS-foundation/" target="_blank" rel="nofollow" title="AXIS on Linkedin" class="linkedin">
+            <a href="https://www.linkedin.com/company/axischain-foundation/" target="_blank" rel="nofollow" title="axischain on Linkedin" class="linkedin">
                 <icon data="@/assets/svg/social-media/linkedin.svg" width="24" height="24"></icon>
             </a>
-        </li>
+        </li> -->
     </ul>
 </template>
 

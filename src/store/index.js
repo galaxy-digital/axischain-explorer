@@ -8,7 +8,7 @@ const vuexPlugins = [];
 
 const vuexLocalStorage = new VuexPersist({
     // The key to store the state on in the storage provider.
-    key: 'vuex-axis-explorer',
+    key: 'vuex-blockchain-explorer',
     storage: window.localStorage,
     asyncStorage: false,
     // Function that passes the state and returns the state with only the Objects you want to store.
@@ -26,7 +26,7 @@ export const store = new Vuex.Store({
         breakpoints: {},
         tokenPrice: 0,
         gasPrice: 0,
-        darkMode: true,
+        darkMode: false,
     },
 
     mutations: {

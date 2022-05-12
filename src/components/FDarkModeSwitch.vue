@@ -1,15 +1,15 @@
 <template>
     <div class="f-dark-mode-switch">
-        <!-- <f-toggle-button v-model="darkModeOn" :title="title" :aria-label="title" /> -->
+        <f-toggle-button v-model="darkModeOn" :title="title" :aria-label="title" />
     </div>
 </template>
 
 <script>
-// import FToggleButton from "@/components/core/FToggleButton/FToggleButton.vue";
+import FToggleButton from "@/components/core/FToggleButton/FToggleButton.vue";
 export default {
     name: "FDarkModeSwitch",
 
-    // components: {FToggleButton},
+    components: {FToggleButton},
 
     watch: {
         darkModeOn(_value) {

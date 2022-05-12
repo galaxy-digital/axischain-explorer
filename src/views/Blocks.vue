@@ -1,17 +1,9 @@
 <template>
-    <div class="">
-        <div class="narrow-container">
-
+    <div class="narrow-container">
         <f-view-heading>
             <h1>{{ $t('view_block_list.title') }} <span v-if="dRecordsCount" class="f-records-count">({{ dRecordsCount }})</span></h1>
-
         </f-view-heading>
-        </div>
-        <div class="div-container" style="padding-top:20px">
-
         <f-block-list @records-count="onRecordsCount"></f-block-list>
-        </div>
-
     </div>
 </template>
 
@@ -40,7 +32,4 @@
 </script>
 
 <style lang="scss">
-.fcard {
-background-color: #1a1a1a !important;
-}
 </style>

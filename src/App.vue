@@ -18,9 +18,6 @@
 </template>
 
 <script>
-import 'bootstrap/dist/css/bootstrap.min.css'
-// import 'jquery/src/jquery.js'
-// import 'bootstrap/dist/js/bootstrap.min.js'
     import FBreakpoint from "./components/FBreakpoint.vue";
     import FBreakpoints from "./components/FBreakpoints.vue";
     import FHeader from "./layouts/FHeader.vue";

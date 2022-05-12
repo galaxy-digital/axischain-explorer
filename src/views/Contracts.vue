@@ -1,19 +1,14 @@
 <template>
-    <div class="">
-        <div class="narrow-container">
-            <f-view-heading>
-                <h1>
-                    {{ $t("view_contract_list.title") }}
-                    <span v-if="dRecordsCount" class="f-records-count">
-                        ({{ dRecordsCount }})
-                    </span>
-                </h1>
-            </f-view-heading>
-            </div>
-        
-            <div class="div-container" style="padding-top:20px">
-                <f-contract-list @records-count="onRecordsCount" />
-            </div>
+    <div class="narrow-container">
+        <f-view-heading>
+            <h1>
+                {{ $t("view_contract_list.title") }}
+                <span v-if="dRecordsCount" class="f-records-count">
+                    ({{ dRecordsCount }})
+                </span>
+            </h1>
+        </f-view-heading>
+        <f-contract-list @records-count="onRecordsCount" />
     </div>
 </template>
 

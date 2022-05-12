@@ -50,87 +50,6 @@
 </script>
 
 <style lang="scss">
- .f-navigation { 
-     nav {
-            ul {
-                li:last-child {
-                    border-radius: 20px;
-                    color:white;
-                    border: 2px solid white;
-                    box-shadow: 0px 0px 10px white;
-                    padding: 0 20px;
-                }
-
-            }
-     }
-
- }
-  .f-navigation { 
-     nav {
-            ul {
-                li:last-child {
-                    a {color:white!important;
-                        border:none !important;
-                        padding:5px !important;
-                    }
-                    margin-left: 10px;
-                }
-
-            }
-     }
-
- }
-   .f-navigation { 
-     nav {
-            ul {
-                li:last-child:hover {background: white;
-                }
-
-            }
-     }
-
- }
-    .f-navigation { 
-     nav {
-            ul {
-                li:last-child:hover {
-                    a {color:black!important;}
-                }
-
-            }
-     }
-
- }
-     .f-navigation { 
-     nav {
-            ul {
-                li{
-                    font-size: 14px;
-                }
-
-            }
-     }
-
- }
-
- .dark-theme .f-navigation {
-        nav {
-            ul {
-                li {
-
-                    @include links() {
-                        color: #6b6b6b;
-                        border-right:1px solid #6b6b6b;
-                        border-radius: 0;
-                    }
-                }
-                li:nth-child(6) a{
-                    border-right:none !important
-                }
-            }
-        }
-    }
-
     .f-navigation {
         --f-navigation-link-color: #{$secondary-color-lighter};
 
@@ -144,16 +63,17 @@
                     margin-inline-start: 4px;
 
                     @include links() {
-                        color: #000;
-                        font-weight: normal;
+                        color: var(--f-navigation-link-color);
+                        font-weight: bold;
                         //letter-spacing: normal;
                         display: inline-block;
-                        padding: 0px 20px;
+                        padding: 16px 18px;
                         text-decoration: none;
                         transition: all $transition-length ease;
+                        border-radius: $border-radius;
 
                         &.router-link-exact-active, &:hover {
-                            color: white;
+                            color: #fff;
                             text-decoration: none;
                         }
                     }
@@ -168,7 +88,7 @@
                 ul {
                     li {
                         @include links() {
-                            font-size: 14px;
+                            font-size: 0.9em;
                             padding-inline-start: 10px;
                             padding-inline-end: 10px;
                         }
@@ -199,7 +119,7 @@
                 ul {
                     li {
                         @include links() {
-                            font-size: 14px;
+                            font-size: 0.8em;
                             padding-inline-start: 2px;
                             padding-inline-end: 2px;
                         }

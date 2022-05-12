@@ -338,12 +338,10 @@
             top: 6px;
             right: 6px;
             outline: none;
-            color:white !important;
-            background-color: transparent !important;
         }
 
         button[type="submit"]:focus {
-            color: white !important;
+            color: $theme-color !important;
             background-color: transparent !important;
         }
 

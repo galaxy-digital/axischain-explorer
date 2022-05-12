@@ -99,6 +99,7 @@
 </template>
 
 <script>
+import config from '../../app.config'
 import FDataTable from '../components/core/FDataTable/FDataTable.vue';
 import FCryptoSymbol from '../components/core/FCryptoSymbol/FCryptoSymbol.vue';
 import { stringSort } from '../utils/array-sorting.js';
@@ -197,7 +198,6 @@ export default {
          * @param {DefiToken[]} _value
          */
         tokens(_value) {
-            // this.items = _value.filter((_item) => _item.isActive && _item.canDeposit && _item.symbol !== 'AXIS');
             this.prepareTokens(_value);
 
             this.items = _value.filter(
@@ -258,7 +258,7 @@ export default {
          * @return {boolean}
          */
         usedInFMint(_token) {
-            return _token.symbol === 'WAXIS' || _token.symbol === 'FUSD';
+            return _token.symbol === config.wsymbol || _token.symbol === config.usdsymbol;
         },
     },
 };

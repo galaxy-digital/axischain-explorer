@@ -6,6 +6,7 @@
                 :items="dItems"
                 :mobile-view="cMobileView"
                 :loading="cLoading"
+                :code="code"
                 first-m-v-column-width="6"
                 fixed-header
                 class="f-data-table-body-bg-color"
@@ -16,14 +17,14 @@
                         <div class="col break-word">
                             <div class="validator-img">
                                 <img v-if="value"  :src="value" :alt="item.stakerInfo.name" class="not-fluid">
-                                <img v-else src="/axis.svg" alt="axis logo" class="not-fluid">
+                                <img v-else src="/logo.png" alt="logo" class="not-fluid">
                             </div>
                         </div>
                     </div>
                     <template v-else>
                         <div class="validator-img">
                             <img v-if="value"  :src="value" :alt="item.stakerInfo.name" class="not-fluid">
-                            <img v-else src="/axis.svg" alt="axis logo" class="not-fluid">
+                            <img v-else src="/logo.png" alt="logo" class="not-fluid">
                         </div>
                     </template>
                 </template>
@@ -51,15 +52,35 @@
                     <div v-if="column" class="row no-collapse no-vert-col-padding">
                         <div class="col-6 f-row-label">{{ column.label }}</div>
                         <div class="col break-word">
-                            <div v-if="item.isOffline" class="offline">{{ $t('view_validator_list.offline') }}</div>
+<!--                            <div v-if="item.isOffline" class="offline">{{ $t('view_validator_list.offline') }}</div>-->
                             <router-link :to="{name: 'validator-detail', params: {address: value}}" :title="value">{{ value | formatHash }}</router-link>
                         </div>
                     </div>
                     <template v-else>
-                        <div v-if="item.isOffline" class="offline">{{ $t('view_validator_list.offline') }}</div>
+<!--                        <div v-if="item.isOffline" class="offline">{{ $t('view_validator_list.offline') }}</div>-->
                         <router-link :to="{name: 'validator-detail', params: {address: value}}" :title="value">{{ value | formatHash }}</router-link>
                     </template>
                 </template>
+
+<!--
+                <template v-slot:column-link="{ value, item, column }">
+                    <div v-if="column" class="row no-collapse no-vert-col-padding">
+                        <div class="col-6 f-row-label">{{ column.label }}</div>
+                        <div class="col break-word">
+                            <a v-if="value" :href="value" target="_blank" rel="nofollow">
+                                <icon data="@/assets/svg/external-link-alt.svg" width="20" height="20"></icon>
+                            </a>
+                            <template v-else>-</template>
+                        </div>
+                    </div>
+                    <template v-else>
+                        <a v-if="value || (item.stakerInfo && item.stakerInfo.contact)" :href="value || (item.stakerInfo && item.stakerInfo.contact)" target="_blank" rel="nofollow">
+                            <icon data="@/assets/svg/external-link-alt.svg"></icon>
+                        </a>
+                        <template v-else>-</template>
+                    </template>
+                </template>
+-->
             </f-data-table>
         </template>
 
@@ -72,10 +93,11 @@
 <script>
     import FDataTable from "../components/core/FDataTable/FDataTable.vue";
     import gql from 'graphql-tag';
-    import { WEIToAXIS } from "../utils/transactions.js";
+    import { WEITo } from "../utils/transactions.js";
     import {formatHexToInt, timestampToDate, numToFixed, formatNumberByLocale, clampDowntime} from "../filters.js";
     import {sortByHex, sortByLocaleString, sortByString} from "../utils/array-sorting.js";
     import {cloneObject} from "@/utils";
+    import {shuffle} from "@/utils/array.js";
 
     export default {
         components: {
@@ -94,7 +116,14 @@
                 default() {
                     return [];
                 }
-            }
+            },
+            /**
+             * Grid's code used for identification in local storage
+             */
+            code: {
+                type: String,
+                default: '',
+            },
         },
 
         apollo: {
@@ -106,6 +135,7 @@
                             stakerAddress
                             isOffline
                             isCheater
+                            isActive
                             createdTime
                             stake
                             totalStake
@@ -129,17 +159,20 @@
                     let data;
                     const offline = [];
                     const flagged = [];
-                    const remove = [];
+                    const inactive = [];
+                    let remove = [];
                     const tUnknown = this.$t('view_validator_list.unknown');
 
                     if (_key === 'stakers') {
                         data = [..._data.data.stakers];
 
+                        shuffle(data);
+
                         data.forEach((_item, _idx) => {
-                            // _item.total_staked = WEIToAXIS(_item.stake) + WEIToAXIS(_item.delegatedMe);
-                            totals.selfStaked += parseFloat(numToFixed(WEIToAXIS(_item.stake), 0));
-                            totals.totalDelegated += parseFloat(numToFixed(WEIToAXIS(_item.delegatedMe), 0));
-                            totals.totalStaked += parseFloat(numToFixed(WEIToAXIS(_item.totalStake), 0));
+                            // _item.total_staked = WEITo(_item.stake) + WEITo(_item.delegatedMe);
+                            totals.selfStaked += parseFloat(numToFixed(WEITo(_item.stake), 0));
+                            totals.totalDelegated += parseFloat(numToFixed(WEITo(_item.delegatedMe), 0));
+                            totals.totalStaked += parseFloat(numToFixed(WEITo(_item.totalStake), 0));
 
                             if (!_item.stakerInfo) {
                                 _item.stakerInfo = {};
@@ -158,6 +191,7 @@
                             }
                         });
 
+                        // offline validators
                         if (offline.length > 0) {
                             offline.forEach((_idx, _index) => {
                                 remove.push(_idx);
@@ -167,6 +201,7 @@
                             this.$emit('validator-list-offline', offline);
                         }
 
+                        // flagged validators
                         if (flagged.length > 0) {
                             flagged.forEach((_idx, _index) => {
                                 remove.push(_idx);
@@ -177,11 +212,22 @@
                         }
 
                         if (remove.length > 0) {
-                            remove.sort().reverse();
-                            remove.forEach((_idx) => {
-                                data.splice(_idx, 1);
-                            })
+                            this.removeItemsByIndices(data, remove);
+                        }
 
+                        // inactive validators
+                        remove = [];
+                        data.forEach((_item, _idx) => {
+                            if (!_item.isActive) {
+                                remove.push(_idx);
+                                inactive.push(cloneObject(data[_idx]));
+                            }
+                        });
+
+                        if (inactive.length > 0) {
+                            this.removeItemsByIndices(data, remove);
+
+                            this.$emit('validator-list-inactive', inactive);
                         }
 
                         this.dItems = data;
@@ -247,14 +293,14 @@
                     {
                         name: 'stake',
                         label: this.$t('view_validator_list.self_staked'),
-                        formatter: _value => formatNumberByLocale(numToFixed(WEIToAXIS(_value), 0), 0),
+                        formatter: _value => formatNumberByLocale(numToFixed(WEITo(_value), 0), 0),
                         sortFunc: sortByHex,
                         cssClass: 'align-end',
                     },
                     {
                         name: 'delegatedMe',
                         label: this.$t('view_validator_list.delegated'),
-                        formatter: _value => formatNumberByLocale(numToFixed(WEIToAXIS(_value), 0), 0),
+                        formatter: _value => formatNumberByLocale(numToFixed(WEITo(_value), 0), 0),
                         sortFunc: sortByHex,
                         cssClass: 'align-end',
                     },
@@ -262,9 +308,9 @@
                     {
                         name: 'totalStake',
                         label: this.$t('view_validator_list.total_staked'),
-                        formatter: _value => formatNumberByLocale(numToFixed(WEIToAXIS(_value), 0), 0),
+                        formatter: _value => formatNumberByLocale(numToFixed(WEITo(_value), 0), 0),
                         sortFunc: sortByHex,
-                        sortDir: 'desc',
+                        // sortDir: 'desc',
                         cssClass: 'align-end',
                     },
 /*
@@ -298,7 +344,18 @@
         },
 
         methods: {
-            WEIToAXIS,
+            sortDesc(a, b) {
+                return b - a;
+            },
+
+            removeItemsByIndices(_array = [], _indices = []) {
+                _indices.sort(this.sortDesc)
+                _indices.forEach((_idx) => {
+                    _array.splice(_idx, 1);
+                })
+            },
+
+            WEITo,
             timestampToDate,
             numToFixed,
             clampDowntime,

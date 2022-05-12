@@ -1,5 +1,5 @@
 <template>
-    <span class="f-token-value" :title="value">
+    <span class="f-token-value" :title="cValue">
         <f-placeholder
             v-if="usePlaceholder"
             :content-loaded="!!token.symbol || contentLoaded"
@@ -20,10 +20,12 @@
 </template>
 
 <script>
+import appConfig from '../../../../app.config.js';
 import { formatNumberByLocale } from '@/filters.js';
 import FPlaceholder from '@/components/core/FPlaceholder/FPlaceholder.vue';
 
 export default {
+    
     name: 'FTokenValue',
 
     components: { FPlaceholder },
@@ -41,6 +43,10 @@ export default {
         value: {
             type: [Number, String],
             default: 0,
+        },
+        convertValue: {
+            type: Boolean,
+            default: false,
         },
         /** Hide currency. */
         noCurrency: {
@@ -60,7 +66,7 @@ export default {
         /** Replacement text for FPlaceholder. */
         replacementText: {
             type: String,
-            default: '10,000.00 AXIS',
+            default: '10,000.00 ' + appConfig.symbol,
         },
         /** Currency symbol used in `formatNumberByLocale` function */
         numberCurrency: {
@@ -89,7 +95,7 @@ export default {
         },
 
         tokenValue() {
-            return this.formatTokenValue(this.value);
+            return this.formatTokenValue(this.cValue);
         },
 
         cDecimals() {
@@ -100,11 +106,21 @@ export default {
             return maxDecimals > 0 && decimals > maxDecimals ? maxDecimals : decimals;
         },
 
+        cValue() {
+            let value = this.value;
+
+            if (this.convertValue) {
+                value = this.$defi.fromTokenValue(this.value, this.token);
+            }
+
+            return value;
+        },
+
         showDots() {
             const { cDecimals } = this;
 
             if (cDecimals > 0) {
-                const fValue = parseFloat(this.value);
+                const fValue = parseFloat(this.cValue);
                 const tfValue = fValue.toFixed(cDecimals);
                 const ftfValue = parseFloat(tfValue);
 

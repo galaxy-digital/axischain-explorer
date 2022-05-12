@@ -1,6 +1,5 @@
 <template>
-    <div class="">
-        <div class="narrow-container">
+    <div class="narrow-container">
         <f-view-heading>
             <h1>
                 {{ $t("epoch.list_title") }}
@@ -9,10 +8,7 @@
                 </span>
             </h1>
         </f-view-heading>
-        </div>
-        <div class="div-container" style="padding-top:20px">
-            <epoch-list @records-count="onRecordsCount" />
-        </div>
+        <epoch-list @records-count="onRecordsCount" />
     </div>
 </template>
 
