@@ -85,8 +85,89 @@
             </div>
             
         </div>
-        
-        <div class="row row-2-cols-lg no-collapse equal-height">
+        <f-card class="home-block" hover>
+            <div class="row row-2-cols-lg" style="width:100%; border: 1px solid #eee">
+                <div class="col">
+                    <div class="home-item border-bottom border-right" >
+                        <div class="icon">
+                            <img width="36" height="36" src="/logo.svg" alt="">
+                        </div>
+                        <div>
+                            <small>Axis Price</small>
+                            <p>${{ price }} <span class="text-danger">(-2.07%)</span></p>
+                        </div>
+                    </div>
+
+                    <div class="home-item border-right">
+                        <div class="icon">
+                            <icon data="@/assets/svg/icon-market-cap.svg" width="28" height="28" style="fill:none;stroke:currentColor" />
+                        </div>
+                        <div>
+                            <small>Market cap</small>
+                            <p>${{ price * 150000000  }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div style="display:flex;flex-direction: row;">
+                        <div class="home-item border-bottom w50">
+                            <div class="icon">
+                                <icon data="@/assets/svg/icon-transations.svg"  width="20" height="20" style="fill:none;stroke:currentColor" />
+                            </div>
+                            <div>
+                                <small>Transactions</small>
+                                <p><animated-number
+                                    :value="chainState.transactions | formatHexToInt"
+                                    :formatValue="formatNum"
+                                    :duration="numAnimationDuration"
+                                /></p>
+                            </div>
+                        </div>
+                        <div class="home-item border-bottom w50">
+                            <div>
+                                <small>Med Gas Price</small>
+                                <p>161 Gwei <span class="blue-grey-color">($4.49)</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:flex;flex-direction: row;">
+                        <div class="home-item w50">
+                            <div class="icon">
+                                <icon data="@/assets/svg/icon-latest.svg" width="20" height="20" style="fill:none;stroke:currentColor" />
+                            </div>
+                            <div>
+                                <small class="muted text-uppercase blue-grey-color">Latest Block</small>
+                                <p><animated-number
+                                    :value="chainState.blocks | formatHexToInt"
+                                    :formatValue="formatNum"
+                                    :duration="numAnimationDuration"
+                                /></p>
+                            </div>
+                        </div>
+                        <div class="home-item w50">
+                            <div>
+                                <small class="muted text-uppercase blue-grey-color">Validators</small>
+                                <p><animated-number
+                                :value="chainState.validators | formatHexToInt"
+                                :formatValue="formatNum"
+                                :duration="numAnimationDuration"
+                            /> <span class="blue-grey-color">(validators)</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <vue-chartist
+                        ratio="ct-major-second"
+                        type="Line"
+                        :data="chartData"
+                        :options="chartOptions"
+                    />
+                </div>
+            </div>
+        </f-card>
+
+        <!-- <div class="row row-2-cols-lg no-collapse equal-height">
             <div class="col">
                 <router-link :to="{name: 'blocks'}" class="no-effect">
                     <f-card class="home-block" hover>
@@ -141,7 +222,7 @@
                     </f-card>
                 </router-link>
             </div>
-        </div>
+        </div> -->
         <div class="row row-2-cols-lg equal-height mat-5">
             <div class="col">
                 <f-card class="half-padding">
@@ -188,6 +269,7 @@
     import TransactionVolumes from "@/components/TransactionVolumes.vue";
     import FListbox from "@/components/core/FListbox/FListbox.vue";
     import {formatNumberByLocale} from "@/filters.js";
+    import VueChartist from 'v-chartist';
 
     export default {
         mixins: [pollingMixin],
@@ -199,7 +281,8 @@
             HomeBlockList,
             FCard,
             FSearchBox,
-            AnimatedNumber
+            AnimatedNumber,
+            'vue-chartist': VueChartist
         },
 
         data() {
@@ -227,7 +310,15 @@
                     accounts: 0,
                     transactions: 0,
                 },
-                symbol: config.symbol
+                symbol: config.symbol,
+                chartData: {
+                    labels: ['Jan 17', 'Jan 24', 'Jan 31', 'Jan 17', 'Jan 24', 'Jan 31'],
+                    series: [
+                        [500, 200, 1200, 1300, 1000, 1400]
+                    ]
+                },
+                chartOptions: {fullWidth: true, height: "120px", low: 0, showArea: false},
+                price: 0.2,
             }
         },
 
@@ -374,6 +465,30 @@
             width:100%;
             left: 0;
             right: 0;
+        }
+    }
+
+    .home-item {
+        display:flex; 
+        align-items: center; 
+        padding: 0.5em;
+    }
+    .border-right {
+        border-right: 1px solid #eee
+    }
+    .border-bottom {
+        border-bottom: 1px solid #eee
+    }
+
+    .icon {
+        width:40px; padding-right: 10px;
+    }
+    .w50 {
+        width: 50%;
+    }
+    @include media-max($bp-small) {
+        .w50 {
+            width: 100%;
         }
     }
 </style>
