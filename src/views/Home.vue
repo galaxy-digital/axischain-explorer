@@ -126,7 +126,7 @@
                         <div class="home-item border-bottom w50">
                             <div>
                                 <small>Med Gas Price</small>
-                                <p>161 Gwei <span class="blue-grey-color">($4.49)</span></p>
+                                <p>{{ Number((gasPrice/1e9).toFixed(6)) }} Gwei</p>
                             </div>
                         </div>
                     </div>
@@ -157,10 +157,10 @@
                     </div>
                 </div>
                 <div class="col">
-                        <div class="txvolumes_label">
-                            <f-listbox v-model="txVolumesResolution" :focus-item-on-focus="true" :data="txVolumesResolutions" labeled-by="txv" horizontal />
-                        </div>
-                        <transaction-volumes :resolution="txVolumesResolution" />
+                    <div class="txvolumes_label">
+                        <f-listbox v-model="txVolumesResolution" :focus-item-on-focus="true" :data="txVolumesResolutions" labeled-by="txv" horizontal />
+                    </div>
+                    <transaction-volumes :resolution="txVolumesResolution" />
                 </div>
             </div>
         </f-card>
@@ -315,6 +315,7 @@
                 },
                 chartOptions: {fullWidth: true, height: "120px", low: 0, showArea: false},
                 price: 0.2,
+                gasPrice: this.gasPrice || 1500000000
             }
         },
 
