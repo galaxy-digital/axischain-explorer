@@ -2925,11 +2925,6 @@ chardet@^0.7.0:
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.7.0.tgz#90094849f0937f2eedc2425d0d28a9e5f0cbad9e"
   integrity sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==
 
-chartist@^0.11.4:
-  version "0.11.4"
-  resolved "https://registry.yarnpkg.com/chartist/-/chartist-0.11.4.tgz#e96e1c573d8b67478920a3a6ae52359d9fc8d8b7"
-  integrity sha512-H4AimxaUD738/u9Mq8t27J4lh6STsLi4BQHt65nOtpLk3xyrBPaLiLMrHw7/WV9CmsjGA02WihjuL5qpSagLYw==
-
 check-types@^8.0.3:
   version "8.0.3"
   resolved "https://registry.yarnpkg.com/check-types/-/check-types-8.0.3.tgz#3356cca19c889544f2d7a95ed49ce508a0ecf552"
@@ -9753,11 +9748,6 @@ uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
-
-v-chartist@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/v-chartist/-/v-chartist-0.1.6.tgz#aa6ca2148315a718e9944237ffc070d310379b54"
-  integrity sha512-VuVroSPbCoiFxeUtZFNj50dghw6ygTxqwIbPcpOx+O/INMql1JU3zl/eyDxNnWJsYtIS8kltQGpndOxQK5KumQ==
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"

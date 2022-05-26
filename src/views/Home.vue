@@ -157,12 +157,10 @@
                     </div>
                 </div>
                 <div class="col">
-                    <vue-chartist
-                        ratio="ct-major-second"
-                        type="Line"
-                        :data="chartData"
-                        :options="chartOptions"
-                    />
+                        <div class="txvolumes_label">
+                            <f-listbox v-model="txVolumesResolution" :focus-item-on-focus="true" :data="txVolumesResolutions" labeled-by="txv" horizontal />
+                        </div>
+                        <transaction-volumes :resolution="txVolumesResolution" />
                 </div>
             </div>
         </f-card>
@@ -243,7 +241,7 @@
                 </f-card>
             </div>
         </div>
-        <div class="row equal-height mat-5">
+        <!-- <div class="row equal-height mat-5">
             <div class="col">
                 <f-card class="half-padding">
                     <div class="txvolumes_label">
@@ -253,7 +251,7 @@
                     <transaction-volumes :resolution="txVolumesResolution" />
                 </f-card>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -266,10 +264,9 @@
     import HomeTransactionList from "@/data-tables/HomeTransactionList.vue";
     import AnimatedNumber from "animated-number-vue";
     import {pollingMixin} from "@/mixins/polling.js";
-    import TransactionVolumes from "@/components/TransactionVolumes.vue";
+    import TransactionVolumes from "@/components/TransactionVolumesChart.vue";
     import FListbox from "@/components/core/FListbox/FListbox.vue";
     import {formatNumberByLocale} from "@/filters.js";
-    import VueChartist from 'v-chartist';
 
     export default {
         mixins: [pollingMixin],
@@ -282,7 +279,6 @@
             FCard,
             FSearchBox,
             AnimatedNumber,
-            'vue-chartist': VueChartist
         },
 
         data() {
@@ -381,7 +377,6 @@
         .f-search-box {
             width: 100%;
             padding: 8px 0 40px 0;
-            //padding: 64px 0;
         }
 
         .home-block {
