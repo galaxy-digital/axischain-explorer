@@ -25,7 +25,7 @@
                                     v-for="(col, index) in columns"
                                     v-show="!col.hidden"
                                     :key="col.name"
-                                    :class="getColumnClass(index, col) + ' ' + getHeadingColumnClass(col)"
+                                    :class="getColumnClass(index, col,) + ' ' + getHeadingColumnClass(col)"
                                 >
                                     <div>{{ col.label }}</div>
                                 </th>
@@ -49,10 +49,10 @@
                                 >
                                     <slot
                                         :name="`column-${col.name}`"
-                                        :value="getItemPropValue(item, col)"
+                                        :value="getItemPropValue(item, col, item)"
                                         :item="item"
                                     >
-                                        {{ getItemPropValue(item, col) }}
+                                        {{ getItemPropValue(item, col, item) }}
                                     </slot>
                                 </td>
                             </tr>

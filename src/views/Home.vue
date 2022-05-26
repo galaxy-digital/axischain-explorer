@@ -227,7 +227,7 @@
             <div class="col">
                 <f-card class="half-padding">
                     <h2 class="h3">Latest Blocks</h2>
-                    <home-block-list :items="blocksData" :hidden-columns="['time', 'fee']" :items-per-page="10" class="home-table" />
+                    <home-block-list :items="blocksData" :hidden-columns="['time']" :items-per-page="10" class="home-table" />
                     <router-link :to="{name: 'blocks'}" class="btn small secondary" style="width: 100%;">
                         View all blocks
                     </router-link>

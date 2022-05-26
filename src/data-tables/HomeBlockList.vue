@@ -1,6 +1,6 @@
 <template>
     <div class="homeblocklist">
-        <transition enter-active-class="fadelong-enter-active">
+        <!-- <transition enter-active-class="fadelong-enter-active"> -->
             <f-data-table
                 v-show="show"
                 :columns="dColumns"
@@ -14,11 +14,32 @@
                 v-bind="{...$attrs, ...$props}"
                 class="f-data-table-body-bg-color"
             >
-                <template v-slot:column-block="{ value, column }">
-                    <div v-if="column" class="row no-collapse no-vert-col-padding">
-                        <div class="col-4 f-row-label">{{ column.label }}</div>
+                <template v-slot:column-block="{ value, column, item }">
+                    <div v-if="column" class="row home-block-item">
                         <div class="col">
-                            <router-link :to="{name: 'block-detail', params: {id: value}}" :title="value">{{value}}</router-link>
+                            <div class="h-block wrap-sm">
+                                <div class="icon">Bk</div>
+                                <div>
+                                    <div>
+                                        <span class="sm">Block: </span>
+                                        <router-link :to="{name: 'block-detail', params: {id: Number(item.block.number)}}" :title="item.block.number">{{Number(item.block.number)}}</router-link>
+                                    </div>
+                                    <div>
+                                        <timeago :datetime="timestampToDate(item.block.timestamp)" :converter-options="{includeSeconds: true}"></timeago>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 wrap-sm">
+                            <div>
+                                <div><span class="sm">Miner: </span>AxisChain</div>
+                                <router-link :to="{name: 'block-detail', params: {id: Number(item.block.number)}}" :title="item.block.number">{{Number(item.block.transactionCount)}} txs</router-link>
+                            </div>
+                        </div>
+                        <div class="col-3 reward">
+                            <div>
+                                <span class="sm">Rewards: </span> {{ Number((Number(item.block.gasUsed) * gasPrice / 1e18).toFixed(4)) + ' ' + symbol }}
+                            </div>
                         </div>
                     </div>
                     <template v-else>
@@ -26,7 +47,7 @@
                     </template>
                 </template>
 
-                <template v-slot:column-age="{ value, column }">
+                <!-- <template v-slot:column-age="{ value, column }">
                     <div v-if="column" class="row no-collapse no-vert-col-padding">
                         <div class="col-4 f-row-label">{{ column.label }}</div>
                         <div class="col">
@@ -36,17 +57,18 @@
                     <template v-else>
                         <timeago :datetime="timestampToDate(value)" :auto-update="5" :converter-options="{includeSeconds: true}"></timeago>
                     </template>
-                </template>
+                </template> -->
             </f-data-table>
-        </transition>
+        <!-- </transition> -->
     </div>
 </template>
 
 <script>
+import config from '../../app.config.js';
 import FBlockList from "@/data-tables/FBlockList.vue";
 import FDataTable from "@/components/core/FDataTable/FDataTable.vue";
 import {WEITo} from "@/utils/transactions.js";
-import {timestampToDate} from "@/filters.js";
+import {timestampToDate, formatHexToInt} from "@/filters.js"; // formatDate, 
 import gql from "graphql-tag";
 import {cloneObject} from "@/utils";
 import {pollingMixin} from "@/mixins/polling.js";
@@ -65,7 +87,42 @@ export default {
     data() {
         return {
             ...FBlockList.data.call(this),
+            dColumns: [
+                {
+                    name: 'block',
+                    label: this.$t('view_block_list.block'),
+                    itemProp: 'block',
+                    formatter: formatHexToInt
+                },
+                // {
+                //     name: 'time',
+                //     label: this.$t('view_block_list.time'),
+                //     itemProp: 'block.timestamp',
+                //     formatter: (_value) => formatDate(timestampToDate(_value)),
+                //     width: '340px'
+                // },
+                // {
+                //     name: 'age',
+                //     label: this.$t('view_block_list.age'),
+                //     itemProp: 'block.timestamp'
+                // },
+                // {
+                //     name: 'fee',
+                //     label: `${this.$t('view_block_list.fee')} (${config.symbol})`,
+                //     itemProp: 'block.gasUsed',
+                //     formatter: (_value) => WEITo(_value * (this.gasPrice || 1500000000)),
+                //     // width: '80px'
+                // },
+                // {
+                //     name: 'transaction_count',
+                //     label: this.$t('view_block_list.transaction_count'),
+                //     itemProp: 'block.transactionCount',
+                //     width: '80px'
+                // }
+            ],
             show: true,
+            symbol: config.symbol,
+            gasPrice: this.gasPrice || 1500000000
         }
     },
 
@@ -143,3 +200,60 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+    .home-block-item {
+        .h-block {
+            display: flex; 
+            align-items: center;    
+            gap: 10px;
+
+            .icon {
+                line-height: 0;
+                font-size: .875rem;
+                width: 2.73438rem;
+                height: 2.73438rem;
+                padding: 0;
+                border: 1px solid #aaa;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 0.5rem;
+            }
+            
+
+            @include media-max($bp-small) {
+                .icon {
+                    display: none;
+                }
+            }
+        }
+        .sm {
+            display: none;
+            padding-right: 10px;
+            @include media-max($bp-small) {
+                display: inline-block;
+            }
+        }
+        .reward > div {
+            height:100%; 
+            display: flex; 
+            justify-content: flex-end; 
+            align-items: center;
+            margin-right: 10px;
+        }
+        @include media-max($bp-small) {
+            .wrap-sm > div {
+                display: flex;
+                gap: 20px;
+            }
+            .reward > div {
+                justify-content: flex-start; 
+            }
+        }
+    }
+
+    @include media-max($bp-small) {
+        
+    }
+</style>
