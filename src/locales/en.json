@@ -203,7 +203,7 @@
         "end_time": "End Time",
         "duration": "Duration",
         "staking_summary": "Staking Summary",
-        "total_self_staked": "Total Self-Staked",
+        "total_self_staked": "Total Staked",
         "total_delegated": "Total Delegated",
         "total_staked": "Total Staked",
         "daily_rewards": "Daily Rewards",

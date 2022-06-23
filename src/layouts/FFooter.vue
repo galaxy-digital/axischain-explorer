@@ -48,15 +48,15 @@
                             </div>
                         </div>
 
-                        <div class="row" style="margin-left: auto">
-                            <a class="col" href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/twitter.svg" width="20" height="20"></icon></a>
-                            <!-- <a class="col" href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/instagram.svg" width="20" height="20"></icon></a> -->
-                            <a class="col" href="https://t.me/laneaxisnetwork"><icon data="@/assets/svg/social-media/telegram.svg" width="20" height="20"></icon></a>
-                            <!-- <a class="col" href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/.svg" width="20" height="20"></icon></a> -->
-                            <a class="col" href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/discord.svg" width="20" height="20"></icon></a>
-                            <a class="col" href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/github.svg" width="20" height="20"></icon></a>
-                            <!-- <a class="col" href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/coinmarket.svg" width="20" height="20"></icon></a>
-                            <a class="col" href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/coingecko.svg" width="20" height="20"></icon></a> -->
+                        <div class="row" style="margin-top: 2em; display: flex; justify-content: center; gap: 2em">
+                            <a href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/twitter.svg" width="20" height="20"></icon></a>
+                            <!-- <a href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/instagram.svg" width="20" height="20"></icon></a> -->
+                            <a href="https://t.me/laneaxisnetwork"><icon data="@/assets/svg/social-media/telegram.svg" width="20" height="20"></icon></a>
+                            <!-- <a href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/.svg" width="20" height="20"></icon></a> -->
+                            <a href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/discord.svg" width="20" height="20"></icon></a>
+                            <a href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/github.svg" width="20" height="20"></icon></a>
+                            <!-- <a href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/coinmarket.svg" width="20" height="20"></icon></a>
+                            <a href="https://twitter.com/LaneAxisNetwork"><icon data="@/assets/svg/social-media/coingecko.svg" width="20" height="20"></icon></a> -->
                         </div>
                     </div>
                 </div>

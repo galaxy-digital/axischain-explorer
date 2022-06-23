@@ -14,6 +14,14 @@
                 v-bind="{...$attrs, ...$props}"
                 class="f-data-table-body-bg-color"
             >
+                <!-- {
+                    "hash": "0x000000ae0000006bb51dc2171b4c4336fa461aa1174eb68a0c4627f37557e134",
+                    "number": "0xd26",
+                    "timestamp": "0x628f0760",
+                    "transactionCount": 0,
+                    "gasUsed": "0x0",
+                    "__typename": "Block"
+                } -->
                 <template v-slot:column-block="{ value, column, item }">
                     <div v-if="column" class="row home-block-item">
                         <div class="col">
@@ -46,7 +54,6 @@
                         <router-link :to="{name: 'block-detail', params: {id: value}}" :title="value">{{value}}</router-link>
                     </template>
                 </template>
-
                 <!-- <template v-slot:column-age="{ value, column }">
                     <div v-if="column" class="row no-collapse no-vert-col-padding">
                         <div class="col-4 f-row-label">{{ column.label }}</div>
@@ -251,9 +258,5 @@ export default {
                 justify-content: flex-start; 
             }
         }
-    }
-
-    @include media-max($bp-small) {
-        
     }
 </style>

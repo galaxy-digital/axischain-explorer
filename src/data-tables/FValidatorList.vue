@@ -16,15 +16,17 @@
                         <div class="col-6 f-row-label">{{ column.label }}</div>
                         <div class="col break-word">
                             <div class="validator-img">
-                                <img v-if="value"  :src="value" :alt="item.stakerInfo.name" class="not-fluid">
-                                <img v-else src="/logo.png" alt="logo" class="not-fluid">
+                                <!-- <img v-if="value"  :src="value" :alt="item.stakerInfo.name" class="not-fluid">
+                                <img v-else src="/logo.png" alt="logo" class="not-fluid"> -->
+                                <img src="/logo.png" alt="logo" class="not-fluid">
                             </div>
                         </div>
                     </div>
                     <template v-else>
                         <div class="validator-img">
-                            <img v-if="value"  :src="value" :alt="item.stakerInfo.name" class="not-fluid">
-                            <img v-else src="/logo.png" alt="logo" class="not-fluid">
+                            <!-- <img v-if="value"  :src="value" :alt="item.stakerInfo.name" class="not-fluid">
+                            <img v-else src="/logo.png" alt="logo" class="not-fluid"> -->
+                            <img src="/logo.png" alt="logo" class="not-fluid">
                         </div>
                     </template>
                 </template>
@@ -34,13 +36,16 @@
                         <div class="col-6 f-row-label">{{ column.label }}</div>
                         <div class="col break-word">
                             {{ value }}
-                            <a v-if="(item.stakerInfo ? item.stakerInfo.website || item.stakerInfo.contact : '')" :href="(item.stakerInfo ? item.stakerInfo.website || item.stakerInfo.contact : '')" target="_blank" rel="nofollow" class="validator-website">
+                            <a href="https://axischain.network" target="_blank" rel="nofollow" class="validator-website">
                                 <icon data="@/assets/svg/external-link-alt.svg"></icon>
                             </a>
+                            <!-- <a v-if="(item.stakerInfo ? item.stakerInfo.website || item.stakerInfo.contact : '')" :href="(item.stakerInfo ? item.stakerInfo.website || item.stakerInfo.contact : '')" target="_blank" rel="nofollow" class="validator-website">
+                                <icon data="@/assets/svg/external-link-alt.svg"></icon>
+                            </a> -->
                         </div>
                     </div>
                     <template v-else>
-                        {{ value }}
+                        {{ /* value */ 'axischain.network' }}
                         <a v-if="(item.stakerInfo ? item.stakerInfo.website || item.stakerInfo.contact : '')" :href="(item.stakerInfo ? item.stakerInfo.website || item.stakerInfo.contact : '')" target="_blank" rel="nofollow" class="validator-website">
                             <icon data="@/assets/svg/external-link-alt.svg"></icon>
                         </a>
